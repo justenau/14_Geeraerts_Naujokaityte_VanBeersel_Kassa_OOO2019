@@ -4,11 +4,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;	
 
-public class KlantView {
+public class ClientView {
 	private Stage stage = new Stage();		
 		
-	public KlantView(){			
-		stage.setTitle("KLANT VIEW");
+	public ClientView(){
+		stage.setTitle("CLIENT VIEW");
 		stage.setResizable(false);		
 		stage.setX(775);
 		stage.setY(20);

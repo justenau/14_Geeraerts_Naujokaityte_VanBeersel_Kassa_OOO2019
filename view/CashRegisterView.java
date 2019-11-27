@@ -1,21 +1,26 @@
 package view;
 
+import controllers.CashRegisterController;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;	
+import javafx.stage.Stage;
+import model.Article;
 
-public class KassaView {
+import java.util.ArrayList;
+
+public class CashRegisterView {
 	private Stage stage = new Stage();		
 		
-	public KassaView(){			
-		stage.setTitle("KASSA VIEW");
+	public CashRegisterView(CashRegisterController controller, ArrayList<Article> tempArticleList){
+		controller.setView(this);
+		stage.setTitle("CASH REGISTER VIEW");
 		stage.setResizable(false);		
 		stage.setX(20);
 		stage.setY(20);
 		Group root = new Group();
 		Scene scene = new Scene(root, 750, 500);
-		BorderPane borderPane = new KassaMainPane();
+		BorderPane borderPane = new CashRegisterMainPane(tempArticleList);
 		borderPane.prefHeightProperty().bind(scene.heightProperty());
 		borderPane.prefWidthProperty().bind(scene.widthProperty());
 		root.getChildren().add(borderPane);
