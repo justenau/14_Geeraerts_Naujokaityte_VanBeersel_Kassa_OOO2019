@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public interface DatabaseStrategy {
+public interface ArticleDBStrategy {
 
     ArrayList<Article> load() throws IOException;
 

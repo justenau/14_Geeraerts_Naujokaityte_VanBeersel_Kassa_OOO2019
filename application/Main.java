@@ -1,8 +1,7 @@
 package application;
 	
-import controllers.CashRegisterController;
-import database.DatabaseStrategy;
-import database.InMemoryArticleDatabase;
+import controller.CashRegisterController;
+import database.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.Article;
@@ -15,10 +14,13 @@ import java.util.ArrayList;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
-		DatabaseStrategy database = new InMemoryArticleDatabase();
+		ArticleDBContext articleDBContext = new ArticleDBContext();
+		ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(ArticleDBEnum.IN_MEMORY);
+		articleDBContext.setArticleDBStrategy(articleDBStrategy);
+
 		ArrayList<Article> articles;
 		try {
-			articles = database.load();
+			articles = articleDBStrategy.load();
 		} catch (IOException e){
 			System.out.println("File with article data hasn't been found");
 			return;

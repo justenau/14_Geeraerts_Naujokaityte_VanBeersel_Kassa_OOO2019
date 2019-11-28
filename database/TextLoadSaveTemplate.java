@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class  TextLoadSaveTemplate {
+public abstract class  TextLoadSaveTemplate implements LoadSaveStrategy {
 
     public final ArrayList load() throws IOException {
         ArrayList collection;
