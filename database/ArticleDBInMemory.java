@@ -6,17 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
 
 public class ArticleDBInMemory implements ArticleDBStrategy {
 
     private HashMap<Integer,Article> articles;
     private LoadSaveStrategy loadSaveStrategy;
-
-    public ArticleDBInMemory(){
-        //TODO: get strategy type from property file
-        this.loadSaveStrategy = LoadSaveFactory.getInstance().getLoadSaveStrategy(LoadSaveEnum.TEXT);
-    }
 
     @Override
     public ArrayList<Article> load() throws IOException {
@@ -39,5 +33,9 @@ public class ArticleDBInMemory implements ArticleDBStrategy {
 
     public void setLoadSaveStrategy(LoadSaveStrategy loadSaveStrategy) {
         this.loadSaveStrategy = loadSaveStrategy;
+    }
+
+    public HashMap<Integer, Article> getArticles() {
+        return articles;
     }
 }
