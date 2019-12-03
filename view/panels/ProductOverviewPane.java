@@ -11,7 +11,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Article;
 
-
+/**
+ * @author Justė Naujokaitytė
+ */
 public class ProductOverviewPane extends GridPane {
 	private TableView<Article> table;
 
@@ -45,6 +47,7 @@ public class ProductOverviewPane extends GridPane {
 		colStock.setMinWidth(70);
 		colStock.setCellValueFactory(new PropertyValueFactory<>("Stock"));
 		table.getColumns().addAll(colCode, colDescription, colGroup,colPrice,colStock);
+        table.getSortOrder().add(colDescription);
 		this.add(table,0,1);
 	}
 }

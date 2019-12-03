@@ -6,12 +6,12 @@ import view.CashRegisterView;
 import java.util.Observable;
 import java.util.Observer;
 
-public class CashRegisterController implements Observer {
+public class CashRegisterViewController implements Observer {
 
     private CashRegisterView view;
     private ArticleDBContext context;
 
-    public CashRegisterController(ArticleDBContext context) {
+    public CashRegisterViewController(ArticleDBContext context) {
         context.addObserver(this);
         this.context = context;
     }

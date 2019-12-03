@@ -1,6 +1,8 @@
 package database;
 
+import javafx.collections.ObservableList;
 import model.Article;
+import model.Sale;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,4 +18,8 @@ public interface ArticleDBStrategy {
     void setLoadSaveStrategy(LoadSaveStrategy loadSaveStrategy);
 
     HashMap<Integer, Article> getArticles();
+
+    void addSoldItem(Sale sale);
+
+    ObservableList<Sale> getSoldItems();
 }

@@ -1,6 +1,6 @@
 package view.panels;
 
-import controller.SettingsController;
+import controller.SettingsPaneController;
 import database.ArticleDBEnum;
 import database.LoadSaveEnum;
 import javafx.collections.FXCollections;
@@ -24,7 +24,7 @@ public class SettingsPane extends GridPane {
     private ChoiceBox loadSaveChoiceBox;
     private Button saveChangesBtn;
 
-    public SettingsPane(SettingsController controller) {
+    public SettingsPane(SettingsPaneController controller) {
         controller.setView(this);
 
         List<String> dbChoices = Stream.of(ArticleDBEnum.values())

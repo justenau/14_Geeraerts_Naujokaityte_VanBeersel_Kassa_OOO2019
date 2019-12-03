@@ -1,8 +1,9 @@
 package application;
 
-import controller.CashRegisterController;
+import controller.CashRegisterPaneController;
+import controller.CashRegisterViewController;
 import controller.ProductOverviewController;
-import controller.SettingsController;
+import controller.SettingsPaneController;
 import database.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -49,14 +50,16 @@ public class Main extends Application {
      */
     private void createUI(ArticleDBContext articleDBContext) {
         //TODO: create controllers for all tabs
-        CashRegisterPane cashRegisterPane = new CashRegisterPane();
         LogPane logPane = new LogPane();
+
+        CashRegisterPaneController cashRegisterPaneController = new CashRegisterPaneController(articleDBContext);
+        CashRegisterPane cashRegisterPane = new CashRegisterPane(cashRegisterPaneController);
 
         ProductOverviewController productOverviewController = new ProductOverviewController(articleDBContext);
         ProductOverviewPane productOverviewPane = new ProductOverviewPane(productOverviewController);
 
-        SettingsController settingsController = new SettingsController(articleDBContext);
-        SettingsPane settingsPane = new SettingsPane(settingsController);
+        SettingsPaneController settingsPaneController = new SettingsPaneController(articleDBContext);
+        SettingsPane settingsPane = new SettingsPane(settingsPaneController);
 
         CashRegisterMainPane cashRegisterMainPane = new CashRegisterMainPane();
         cashRegisterMainPane.addTab(cashRegisterPane, "Cash register");
@@ -64,8 +67,8 @@ public class Main extends Application {
         cashRegisterMainPane.addTab(settingsPane, "Settings");
         cashRegisterMainPane.addTab(logPane, "Log");
 
-        CashRegisterController cashRegisterController = new CashRegisterController(articleDBContext);
-        CashRegisterView cashRegisterView = new CashRegisterView(cashRegisterController, cashRegisterMainPane);
+        CashRegisterViewController cashRegisterViewController = new CashRegisterViewController(articleDBContext);
+        CashRegisterView cashRegisterView = new CashRegisterView(cashRegisterViewController, cashRegisterMainPane);
 
         ClientView clientView = new ClientView();
     }

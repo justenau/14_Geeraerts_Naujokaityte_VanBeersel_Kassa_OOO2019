@@ -1,6 +1,6 @@
 package view;
 
-import controller.CashRegisterController;
+import controller.CashRegisterViewController;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -10,7 +10,7 @@ public class CashRegisterView {
     private Stage stage = new Stage();
     private Group root = new Group();
 
-    public CashRegisterView(CashRegisterController controller, BorderPane mainPane) {
+    public CashRegisterView(CashRegisterViewController controller, BorderPane mainPane) {
 		controller.setView(this);
 
 		stage.setTitle("CASH REGISTER VIEW");

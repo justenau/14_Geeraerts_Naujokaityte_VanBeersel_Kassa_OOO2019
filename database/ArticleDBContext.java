@@ -1,6 +1,8 @@
 package database;
 
+import javafx.collections.ObservableList;
 import model.Article;
+import model.Sale;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,5 +35,26 @@ public class ArticleDBContext extends Observable {
 
     public void saveArticleDB(ArrayList<Article> articles) throws FileNotFoundException {
         articleDB.save(articles);
+    }
+
+    public void addSoldItem(Sale sale) {
+        this.articleDB.addSoldItem(sale);
+    }
+
+    public ObservableList<Sale> getSoldItems() {
+        return this.articleDB.getSoldItems();
+    }
+
+    public Article getArticle(int code) {
+        return articleDB.getArticles().get(code);
+    }
+
+    public boolean checkAvailabilityForSale(Article article) {
+        int currentStock = article.getStock();
+        int saleCount = 0;
+        for (Sale sale : getSoldItems()) {
+            saleCount = sale.getArticle().getCode() == article.getCode() ? saleCount + 1 : saleCount;
+        }
+        return currentStock > 0 && saleCount != currentStock;
     }
 }

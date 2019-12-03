@@ -12,12 +12,12 @@ import java.util.Properties;
 /**
  * @author Justė Naujokaitytė
  */
-public class SettingsController {
+public class SettingsPaneController {
 
     private ArticleDBContext context;
     private SettingsPane view;
 
-    public SettingsController(ArticleDBContext context) {
+    public SettingsPaneController(ArticleDBContext context) {
         this.context = context;
     }
 
