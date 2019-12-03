@@ -1,6 +1,20 @@
 package model;
 
 public class Article {
+    private int code;
+    private String description;
+    private String group;
+    private double price;
+    private int stock;
+
+    public Article(int code, String description, String group, double price, int stock) {
+        this.code = code;
+        this.description = description;
+        this.group = group;
+        this.price = price;
+        this.stock = stock;
+    }
+
     public int getCode() {
         return code;
     }
@@ -38,20 +52,6 @@ public class Article {
     }
 
     public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    private int code;
-    private String description;
-    private String group;
-    private double price;
-    private int stock;
-
-    public Article(int code, String description, String group, double price, int stock) {
-        this.code = code;
-        this.description = description;
-        this.group = group;
-        this.price = price;
         this.stock = stock;
     }
 }

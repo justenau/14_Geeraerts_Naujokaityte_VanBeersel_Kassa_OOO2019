@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 
 public class CashRegisterView {
     private Stage stage = new Stage();
-    private Group root = new Group();
 
     public CashRegisterView(CashRegisterViewController controller, BorderPane mainPane) {
 		controller.setView(this);
