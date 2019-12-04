@@ -1,7 +1,6 @@
 package controller;
 
 import database.ArticleDBContext;
-import javafx.collections.ObservableList;
 import model.Article;
 import model.Sale;
 import view.panels.CashRegisterPane;
@@ -26,7 +25,6 @@ public class CashRegisterPaneController {
 
     public void sellItem(String text) {
         try {
-            ObservableList<Sale> a = context.getSoldItems();
             int code = Integer.parseInt(text.replaceAll("\\s", ""));
             Article article = context.getArticle(code);
             if (article == null) {

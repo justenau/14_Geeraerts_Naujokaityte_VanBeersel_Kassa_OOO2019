@@ -39,6 +39,8 @@ public class ArticleDBContext extends Observable {
 
     public void addSoldItem(Sale sale) {
         this.articleDB.addSoldItem(sale);
+        setChanged();
+        notifyObservers(sale.getArticle());
     }
 
     public ObservableList<Sale> getSoldItems() {

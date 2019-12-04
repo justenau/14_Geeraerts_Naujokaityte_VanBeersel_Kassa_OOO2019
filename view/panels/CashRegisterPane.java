@@ -49,7 +49,7 @@ public class CashRegisterPane extends GridPane {
         table.setItems(soldItems);
         table.setRowFactory(tableView -> new TableRow<>());
         TableColumn<Sale, String> colDescription = new TableColumn<>("Description");
-        colDescription.setMinWidth(70);
+        colDescription.setMinWidth(120);
         colDescription.setCellValueFactory(data -> {
             StringProperty sp = new SimpleStringProperty();
             sp.setValue(String.valueOf(data.getValue().getArticle().getDescription()));

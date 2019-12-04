@@ -1,9 +1,6 @@
 package application;
 
-import controller.CashRegisterPaneController;
-import controller.CashRegisterViewController;
-import controller.ProductOverviewController;
-import controller.SettingsPaneController;
+import controller.*;
 import database.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -70,7 +67,8 @@ public class Main extends Application {
         CashRegisterViewController cashRegisterViewController = new CashRegisterViewController(articleDBContext);
         CashRegisterView cashRegisterView = new CashRegisterView(cashRegisterViewController, cashRegisterMainPane);
 
-        ClientView clientView = new ClientView();
+        ClientViewController clientViewController = new ClientViewController(articleDBContext);
+        ClientView clientView = new ClientView(clientViewController);
     }
 	
 	public static void main(String[] args) {

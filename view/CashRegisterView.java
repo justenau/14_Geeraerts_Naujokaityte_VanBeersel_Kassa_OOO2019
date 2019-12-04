@@ -10,8 +10,6 @@ public class CashRegisterView {
     private Stage stage = new Stage();
 
     public CashRegisterView(CashRegisterViewController controller, BorderPane mainPane) {
-		controller.setView(this);
-
 		stage.setTitle("CASH REGISTER VIEW");
         stage.setResizable(false);
 		stage.setX(20);
