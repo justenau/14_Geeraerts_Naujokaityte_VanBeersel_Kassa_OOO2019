@@ -35,11 +35,30 @@ public class CashRegisterPane extends GridPane {
             }
         });
 
+        Button onHoldBtn = new Button("Put on hold");
+        Button getBackBtn = new Button("Continue previous sale");
+
+        onHoldBtn.setOnAction(a -> {
+            controller.putSaleOnHold();
+            onHoldBtn.setDisable(true);
+            getBackBtn.setDisable(false);
+        });
+
+        getBackBtn.setDisable(true);
+        getBackBtn.setOnAction(a -> {
+            controller.continueSaleOnHold();
+            getBackBtn.setDisable(true);
+            onHoldBtn.setDisable(false);
+        });
+
         this.add(totalLabel, 0, 0);
         this.add(priceField, 1, 0);
         this.add(codeInput, 2, 0);
+        this.add(onHoldBtn, 0, 2);
+        this.add(getBackBtn, 1, 2);
         this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
+        this.setHgap(5);
         setMargin(codeInput, new Insets(0, 0, 0, 200));
 
     }
@@ -65,7 +84,7 @@ public class CashRegisterPane extends GridPane {
         });
         table.getColumns().addAll(colDescription, colPrice);
         table.setPrefWidth(500);
-        this.add(table, 0, 1, 3, 3);
+        this.add(table, 0, 1, 3, 1);
     }
 
     public void showErrorMessage(String header, String message) {

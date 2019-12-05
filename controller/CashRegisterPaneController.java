@@ -42,4 +42,9 @@ public class CashRegisterPaneController {
         }
     }
 
+    public void putSaleOnHold() {
+    }
+
+    public void continueSaleOnHold() {
+    }
 }
