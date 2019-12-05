@@ -15,6 +15,7 @@ import view.panels.SettingsPane;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 
 public class Main extends Application {
@@ -72,6 +73,7 @@ public class Main extends Application {
     }
 	
 	public static void main(String[] args) {
+        Locale.setDefault(Locale.US);
 		launch(args);
     }
 
