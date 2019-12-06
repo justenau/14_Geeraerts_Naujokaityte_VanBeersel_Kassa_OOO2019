@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import model.Article;
 import model.Sale;
 import model.SaleStatus;
+import model.discount.DiscountStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Observable;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
+    private DiscountStrategy discountStrategy;
 
     public ArticleDBStrategy getArticleDB() {
         return articleDB;
@@ -118,5 +120,9 @@ public class ArticleDBContext extends Observable {
             return true;
         }
         return false;
+    }
+
+    public void setDiscountStrategy(DiscountStrategy discountStrategy) {
+        this.discountStrategy = discountStrategy;
     }
 }

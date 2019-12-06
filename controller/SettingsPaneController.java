@@ -2,6 +2,8 @@ package controller;
 
 import database.*;
 import javafx.scene.control.Alert;
+import model.discount.DiscountFactory;
+import model.discount.DiscountStrategy;
 import view.panels.SettingsPane;
 
 import java.io.FileInputStream;
@@ -25,15 +27,11 @@ public class SettingsPaneController {
         this.view = view;
     }
 
-    public void saveChanges(String databaseValue, String loadSaveValue) {
-        if (databaseValue == null && loadSaveValue == null) {
-            view.showMessage(Alert.AlertType.INFORMATION, "No settings changed",
-                    "There were no changes to be saved.");
-            return;
-        }
+    public void saveChanges(String databaseValue, String loadSaveValue, String discountType,
+                            String discountValue, String discountAdditional) {
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream("src/config.properties"));
+            properties.load(new FileInputStream("src/files/config.properties"));
             if (databaseValue != null && !databaseValue.isEmpty()) {
                 ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(databaseValue);
                 context.setArticleDB(articleDBStrategy);
@@ -44,7 +42,13 @@ public class SettingsPaneController {
                 context.setLoadSaveStrategy(loadSaveStrategy);
                 properties.setProperty("loadSave", loadSaveValue);
             }
-            properties.store(new FileOutputStream("src/config.properties"), null);
+            if (discountType != null && !discountType.isEmpty()) {
+                DiscountStrategy discountStrategy = DiscountFactory.getInstance()
+                        .createDiscountStrategy(discountType, Double.parseDouble(discountValue), discountAdditional);
+                context.setDiscountStrategy(discountStrategy);
+                properties.setProperty("discount", String.format("%s-%s-%s", discountType, discountValue, discountAdditional));
+            }
+            properties.store(new FileOutputStream("src/files/config.properties"), null);
 
             view.showMessage(Alert.AlertType.INFORMATION, "Changes saved!",
                     "Changes have been successfully changed!");

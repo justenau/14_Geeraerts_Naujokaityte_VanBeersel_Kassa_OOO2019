@@ -15,7 +15,7 @@ public class ArticleTextLoadSave extends TextLoadSaveTemplate {
 
     @Override
     public void save(ArrayList objects) throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter(new FileOutputStream("src/database/artikel.txt"));
+        PrintWriter pw = new PrintWriter(new FileOutputStream("src/files/artikel.txt"));
         ArrayList<Article> articles = new ArrayList<>(objects);
         for (Article article : articles) {
             pw.println(String.format("%d,%s,%s,%.2f,%d",
@@ -32,7 +32,7 @@ public class ArticleTextLoadSave extends TextLoadSaveTemplate {
     public List<String> readFile() throws IOException {
         //TODO: get file path from properties?
         System.out.println(new File(".").getAbsolutePath());
-        return Files.readAllLines(new File("src/database/artikel.txt").toPath(), StandardCharsets.UTF_8);
+        return Files.readAllLines(new File("src/files/artikel.txt").toPath(), StandardCharsets.UTF_8);
     }
 
     @Override

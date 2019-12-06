@@ -4,6 +4,8 @@ import controller.*;
 import database.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.discount.DiscountFactory;
+import model.discount.DiscountStrategy;
 import view.CashRegisterMainPane;
 import view.CashRegisterView;
 import view.ClientView;
@@ -25,7 +27,7 @@ public class Main extends Application {
         Properties properties = new Properties();
 		try {
             System.out.println(new File(".").getAbsolutePath());
-            properties.load(new FileInputStream("src/config.properties"));
+            properties.load(new FileInputStream("src/files/config.properties"));
             String dbType = properties.getProperty("database");
             ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(dbType);
             articleDBContext.setArticleDB(articleDBStrategy);
@@ -33,6 +35,14 @@ public class Main extends Application {
             String loadSaveType = properties.getProperty("loadSave");
             LoadSaveStrategy loadSaveStrategy = LoadSaveFactory.getInstance().createLoadSaveStrategy(loadSaveType);
             articleDBContext.setLoadSaveStrategy(loadSaveStrategy);
+
+            String discountType = properties.getProperty("discount");
+            if (!discountType.isEmpty()) {
+                String[] discount = discountType.split("-");
+                DiscountStrategy discountStrategy = DiscountFactory.getInstance()
+                        .createDiscountStrategy(discount[0], Double.parseDouble(discount[1]), discount[2]);
+                articleDBContext.setDiscountStrategy(discountStrategy);
+            }
         } catch (IOException e) {
             System.out.println("Properties file couldn't be loaded");
             return;

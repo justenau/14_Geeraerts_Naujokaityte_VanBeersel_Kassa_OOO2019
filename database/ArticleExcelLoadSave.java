@@ -1,9 +1,10 @@
 package database;
 
+import excel.ExcelPlugin;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import model.Article;
-import excel.ExcelPlugin;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class ArticleExcelLoadSave implements LoadSaveStrategy {
     public ArrayList<Article> load() throws IOException {
         ArrayList arrayList = new ArrayList();
         try {
-            arrayList = excelPlugin.read(new File("src/database/artikel.xls"));
+            arrayList = excelPlugin.read(new File("src/files/artikel.xls"));
         } catch (BiffException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -36,7 +37,7 @@ public class ArticleExcelLoadSave implements LoadSaveStrategy {
     public void save(ArrayList<Article> articles) throws FileNotFoundException {
         ArrayList arrayList = new ArrayList<ArrayList<String>>();
         try {
-            excelPlugin.write(new File("src/database/artikel.xls"),arrayList);
+            excelPlugin.write(new File("src/files/artikel.xls"), arrayList);
         } catch (BiffException e) {
             e.printStackTrace();
         } catch (IOException e) {
