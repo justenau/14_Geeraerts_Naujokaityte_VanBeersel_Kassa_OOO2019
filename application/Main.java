@@ -39,8 +39,9 @@ public class Main extends Application {
             String discountType = properties.getProperty("discount");
             if (!discountType.isEmpty()) {
                 String[] discount = discountType.split("-");
+                String info = discount.length == 2 ? "" : discount[2];
                 DiscountStrategy discountStrategy = DiscountFactory.getInstance()
-                        .createDiscountStrategy(discount[0], Double.parseDouble(discount[1]), discount[2]);
+                        .createDiscountStrategy(discount[0], Double.parseDouble(discount[1]), info);
                 articleDBContext.setDiscountStrategy(discountStrategy);
             }
         } catch (IOException e) {

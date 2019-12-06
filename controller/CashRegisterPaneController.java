@@ -2,17 +2,22 @@ package controller;
 
 import database.ArticleDBContext;
 import model.Article;
+import model.SaleStatus;
 import view.panels.CashRegisterPane;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author Justė Naujokaitytė
  */
-public class CashRegisterPaneController {
+public class CashRegisterPaneController implements Observer {
     private CashRegisterPane view;
     private ArticleDBContext context;
 
     public CashRegisterPaneController(ArticleDBContext context) {
         this.context = context;
+        context.addObserver(this);
         context.startNewSale();
     }
 
@@ -67,7 +72,14 @@ public class CashRegisterPaneController {
             double discount = context.getDiscount();
             view.showDiscount(discount);
             context.closeSale();
+            return true;
         }
-        return false;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof SaleStatus && arg == SaleStatus.CANCELLED) {
+            view.disableSaleOnHold();
+        }
     }
 }

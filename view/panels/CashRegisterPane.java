@@ -21,6 +21,7 @@ public class CashRegisterPane extends GridPane {
     private Label priceField;
     private Label discountLabel;
     private Label discountAmount;
+    private Button getBackBtn;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
         controller.setView(this);
@@ -47,7 +48,7 @@ public class CashRegisterPane extends GridPane {
 
         Button onHoldBtn = new Button("Put on hold");
         onHoldBtn.setPrefWidth(190);
-        Button getBackBtn = new Button("Continue sale on hold");
+        getBackBtn = new Button("Continue sale on hold");
         getBackBtn.setPrefWidth(250);
         Button closeSaleBtn = new Button("Close sale");
         closeSaleBtn.setPrefWidth(170);
@@ -68,6 +69,7 @@ public class CashRegisterPane extends GridPane {
         closeSaleBtn.setOnAction(a -> {
             if (controller.closeSale()) {
                 onHoldBtn.setDisable(true);
+                closeSaleBtn.setDisable(true);
             }
         });
 
@@ -111,7 +113,11 @@ public class CashRegisterPane extends GridPane {
     }
 
     public void showErrorMessage(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        showMessage(Alert.AlertType.ERROR, header, message);
+    }
+
+    public void showMessage(Alert.AlertType alertType, String header, String message) {
+        Alert alert = new Alert(alertType);
         alert.setHeaderText(header);
         alert.setContentText(message);
         alert.showAndWait();
@@ -138,5 +144,10 @@ public class CashRegisterPane extends GridPane {
         discountLabel.setVisible(true);
         discountAmount.setText(String.format("%.2f", discount));
         discountAmount.setVisible(true);
+    }
+
+    public void disableSaleOnHold() {
+        showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been cancelled");
+        getBackBtn.setDisable(true);
     }
 }

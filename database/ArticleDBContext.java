@@ -15,6 +15,7 @@ import java.util.Observable;
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
     private DiscountStrategy discountStrategy;
+    private int onHoldClientCounter;
 
     public ArticleDBStrategy getArticleDB() {
         return articleDB;
@@ -134,6 +135,12 @@ public class ArticleDBContext extends Observable {
     }
 
     public void closeSale() {
+        if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
+            onHoldClientCounter = 0;
+            getSaleOnHold().setSaleStatus(SaleStatus.CANCELLED);
+            setChanged();
+            notifyObservers(SaleStatus.CANCELLED);
+        }
         getCurrentSale().setSaleStatus(SaleStatus.CLOSED);
         setChanged();
         notifyObservers(SaleStatus.CLOSED);
