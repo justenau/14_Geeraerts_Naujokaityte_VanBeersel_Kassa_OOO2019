@@ -1,7 +1,5 @@
 package database;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Article;
 import model.Sale;
 
@@ -13,11 +11,11 @@ import java.util.HashMap;
 public class ArticleDBInMemory implements ArticleDBStrategy {
 
     private HashMap<Integer,Article> articles;
-    private ObservableList<Sale> soldItems;
+    private ArrayList<Sale> sales;
     private LoadSaveStrategy loadSaveStrategy;
 
     public ArticleDBInMemory() {
-        soldItems = FXCollections.observableArrayList();
+        sales = new ArrayList<>();
     }
 
     @Override
@@ -47,12 +45,8 @@ public class ArticleDBInMemory implements ArticleDBStrategy {
         return articles;
     }
 
-    public void addSoldItem(Sale sale) {
-        this.soldItems.add(sale);
-    }
-
     @Override
-    public ObservableList<Sale> getSoldItems() {
-        return soldItems;
+    public ArrayList<Sale> getSales() {
+        return sales;
     }
 }

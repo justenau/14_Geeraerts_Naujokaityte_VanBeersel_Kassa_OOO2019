@@ -2,10 +2,7 @@ package controller;
 
 import database.ArticleDBContext;
 import model.Article;
-import model.Sale;
 import view.panels.CashRegisterPane;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Justė Naujokaitytė
@@ -16,11 +13,12 @@ public class CashRegisterPaneController {
 
     public CashRegisterPaneController(ArticleDBContext context) {
         this.context = context;
+        context.startNewSale();
     }
 
     public void setView(CashRegisterPane view) {
         this.view = view;
-        this.view.setTableContent(context.getSoldItems());
+        this.view.setTableContent(context.getActiveSaleSoldItems());
     }
 
     public void sellItem(String text) {
@@ -35,7 +33,7 @@ public class CashRegisterPaneController {
                 view.showErrorMessage("Product not in stock", "Chosen product is not in stock for sale!");
                 return;
             }
-            context.addSoldItem(new Sale(article, LocalDateTime.now()));
+            context.addSoldItem(article);
             view.updateTotalPrice(article.getPrice());
         } catch (NumberFormatException e) {
             view.showErrorMessage("Bad input", "Product code must be a number!");
@@ -43,8 +41,24 @@ public class CashRegisterPaneController {
     }
 
     public void putSaleOnHold() {
+        if (!context.putActiveSaleOnHold()) {
+            view.showErrorMessage("Unable to put sale on hold", "A sale on hold already exists!");
+            return;
+        }
+        view.updateTableList(context.getActiveSaleSoldItems());
+        view.resetTotalPrice();
     }
 
+    ;
+
+
     public void continueSaleOnHold() {
+        if (!context.continueSaleOnHold()) {
+            view.showErrorMessage("Unable to continue sale on hold", "Current active sale must be finished!");
+            return;
+        }
+        view.updateTableList(context.getActiveSaleSoldItems());
+        double price = context.getActiveSalePrice();
+        view.setTotalPrice(price);
     }
 }

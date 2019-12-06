@@ -3,6 +3,7 @@ package database;
 import javafx.collections.ObservableList;
 import model.Article;
 import model.Sale;
+import model.SaleStatus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,14 +38,23 @@ public class ArticleDBContext extends Observable {
         articleDB.save(articles);
     }
 
-    public void addSoldItem(Sale sale) {
-        this.articleDB.addSoldItem(sale);
+    public void addSoldItem(Article article) {
+        Sale activeSale = getActiveSale();
+        activeSale.addArticle(article);
         setChanged();
-        notifyObservers(sale.getArticle());
+        notifyObservers(article);
     }
 
-    public ObservableList<Sale> getSoldItems() {
-        return this.articleDB.getSoldItems();
+    public Sale getActiveSale() {
+        for (Sale sale : this.articleDB.getSales()) {
+            if (sale.getSaleStatus() == SaleStatus.ACTIVE)
+                return sale;
+        }
+        return null;
+    }
+
+    public ObservableList<Article> getActiveSaleSoldItems() {
+        return getActiveSale().getArticles();
     }
 
     public Article getArticle(int code) {
@@ -54,9 +64,59 @@ public class ArticleDBContext extends Observable {
     public boolean checkAvailabilityForSale(Article article) {
         int currentStock = article.getStock();
         int saleCount = 0;
-        for (Sale sale : getSoldItems()) {
-            saleCount = sale.getArticle().getCode() == article.getCode() ? saleCount + 1 : saleCount;
+        for (Sale sale : articleDB.getSales()) {
+            for (Article a : sale.getArticles()) {
+                saleCount = a.getCode() == article.getCode() ? saleCount + 1 : saleCount;
+            }
         }
         return currentStock > 0 && saleCount != currentStock;
+    }
+
+    public void startNewSale() {
+        articleDB.getSales().add(new Sale());
+    }
+
+    public boolean putActiveSaleOnHold() {
+        for (Sale sale : getArticleDB().getSales()) {
+            if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
+                return false;
+            }
+        }
+        getActiveSale().setSaleStatus(SaleStatus.ON_HOLD);
+        setChanged();
+        notifyObservers(SaleStatus.ON_HOLD);
+        startNewSale();
+        return true;
+    }
+
+    public double getActiveSalePrice() {
+        double price = 0;
+        for (Article article : getActiveSaleSoldItems()) {
+            price += article.getPrice();
+        }
+        ;
+        return price;
+    }
+
+    public Sale getSaleOnHold() {
+        for (Sale sale : articleDB.getSales()) {
+            if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
+                return sale;
+            }
+        }
+        return null;
+    }
+
+    public boolean continueSaleOnHold() {
+        Sale currentSale = getActiveSale();
+        Sale saleOnHold = getSaleOnHold();
+        if (currentSale.getArticles().isEmpty() && saleOnHold != null) {
+            articleDB.getSales().remove(currentSale);
+            saleOnHold.setSaleStatus(SaleStatus.ACTIVE);
+            setChanged();
+            notifyObservers(getActiveSaleSoldItems());
+            return true;
+        }
+        return false;
     }
 }

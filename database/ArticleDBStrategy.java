@@ -1,6 +1,5 @@
 package database;
 
-import javafx.collections.ObservableList;
 import model.Article;
 import model.Sale;
 
@@ -19,7 +18,5 @@ public interface ArticleDBStrategy {
 
     HashMap<Integer, Article> getArticles();
 
-    void addSoldItem(Sale sale);
-
-    ObservableList<Sale> getSoldItems();
+    ArrayList<Sale> getSales();
 }

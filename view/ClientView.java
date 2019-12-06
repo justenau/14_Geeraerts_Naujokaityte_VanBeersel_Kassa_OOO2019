@@ -84,4 +84,12 @@ public class ClientView {
 	}
 
 
+    public void clearList() {
+        tableView.getItems().clear();
+    }
+
+
+    public void clearTotalPrice() {
+        priceField.setText("0");
+    }
 }

@@ -10,14 +10,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import model.Sale;
+import model.Article;
 
 /**
  * @author Justė Naujokaitytė
  */
 public class CashRegisterPane extends GridPane {
 
-    private TableView<Sale> table;
+    private TableView<Article> table;
     private Label priceField;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
@@ -63,23 +63,23 @@ public class CashRegisterPane extends GridPane {
 
     }
 
-    public void setTableContent(ObservableList<Sale> soldItems) {
+    public void setTableContent(ObservableList<Article> soldItems) {
         table = new TableView<>();
         table.setItems(soldItems);
         table.setRowFactory(tableView -> new TableRow<>());
-        TableColumn<Sale, String> colDescription = new TableColumn<>("Description");
+        TableColumn<Article, String> colDescription = new TableColumn<>("Description");
         colDescription.setMinWidth(120);
         colDescription.setCellValueFactory(data -> {
             StringProperty sp = new SimpleStringProperty();
-            sp.setValue(String.valueOf(data.getValue().getArticle().getDescription()));
+            sp.setValue(String.valueOf(data.getValue().getDescription()));
             return sp;
         });
 
-        TableColumn<Sale, Double> colPrice = new TableColumn<>("Price");
+        TableColumn<Article, Double> colPrice = new TableColumn<>("Price");
         colPrice.setMinWidth(100);
         colPrice.setCellValueFactory(data -> {
             DoubleProperty dp = new SimpleDoubleProperty();
-            dp.setValue(data.getValue().getArticle().getPrice());
+            dp.setValue(data.getValue().getPrice());
             return dp.asObject();
         });
         table.getColumns().addAll(colDescription, colPrice);
@@ -96,6 +96,18 @@ public class CashRegisterPane extends GridPane {
 
     public void updateTotalPrice(double price) {
         double newPrice = Double.parseDouble(priceField.getText()) + price;
-        priceField.setText(String.format("%.2f", newPrice));
+        setTotalPrice(newPrice);
+    }
+
+    public void updateTableList(ObservableList<Article> items) {
+        table.setItems(items);
+    }
+
+    public void resetTotalPrice() {
+        priceField.setText("0");
+    }
+
+    public void setTotalPrice(double price) {
+        priceField.setText(String.format("%.2f", price));
     }
 }
