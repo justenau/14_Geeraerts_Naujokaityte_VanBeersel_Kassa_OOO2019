@@ -41,22 +41,22 @@ public class ArticleDBContext extends Observable {
     }
 
     public void addSoldItem(Article article) {
-        Sale activeSale = getActiveSale();
+        Sale activeSale = getCurrentSale();
         activeSale.addArticle(article);
         setChanged();
         notifyObservers(article);
     }
 
-    public Sale getActiveSale() {
+    public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
-            if (sale.getSaleStatus() == SaleStatus.ACTIVE)
+            if (sale.getSaleStatus() == SaleStatus.ACTIVE || sale.getSaleStatus() == SaleStatus.CLOSED)
                 return sale;
         }
         return null;
     }
 
     public ObservableList<Article> getActiveSaleSoldItems() {
-        return getActiveSale().getArticles();
+        return getCurrentSale().getArticles();
     }
 
     public Article getArticle(int code) {
@@ -84,7 +84,7 @@ public class ArticleDBContext extends Observable {
                 return false;
             }
         }
-        getActiveSale().setSaleStatus(SaleStatus.ON_HOLD);
+        getCurrentSale().setSaleStatus(SaleStatus.ON_HOLD);
         setChanged();
         notifyObservers(SaleStatus.ON_HOLD);
         startNewSale();
@@ -110,7 +110,7 @@ public class ArticleDBContext extends Observable {
     }
 
     public boolean continueSaleOnHold() {
-        Sale currentSale = getActiveSale();
+        Sale currentSale = getCurrentSale();
         Sale saleOnHold = getSaleOnHold();
         if (currentSale.getArticles().isEmpty() && saleOnHold != null) {
             articleDB.getSales().remove(currentSale);
@@ -124,5 +124,18 @@ public class ArticleDBContext extends Observable {
 
     public void setDiscountStrategy(DiscountStrategy discountStrategy) {
         this.discountStrategy = discountStrategy;
+    }
+
+    public double getDiscount() {
+        if (discountStrategy != null) {
+            return discountStrategy.calculateDiscount(getCurrentSale());
+        }
+        return 0;
+    }
+
+    public void closeSale() {
+        getCurrentSale().setSaleStatus(SaleStatus.CLOSED);
+        setChanged();
+        notifyObservers(SaleStatus.CLOSED);
     }
 }

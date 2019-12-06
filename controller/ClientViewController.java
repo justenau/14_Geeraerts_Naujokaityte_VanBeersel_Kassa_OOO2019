@@ -35,6 +35,8 @@ public class ClientViewController implements Observer {
             if (saleStatus == SaleStatus.ON_HOLD) {
                 view.clearList();
                 view.clearTotalPrice();
+            } else if (saleStatus == SaleStatus.CLOSED) {
+                view.showDiscount(((ArticleDBContext) o).getDiscount());
             }
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;

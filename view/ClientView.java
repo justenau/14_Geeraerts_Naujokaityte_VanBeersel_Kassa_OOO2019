@@ -22,6 +22,8 @@ import java.util.Map;
 public class ClientView {
 	private Label priceField;
 	private TableView<Map.Entry<Article, Integer>> tableView;
+	private Label discountLabel;
+	private Label discountAmount;
 
 	public ClientView(ClientViewController controller) {
 		controller.setView(this);
@@ -31,17 +33,27 @@ public class ClientView {
 		Label priceLabel = new Label("Total price: ");
 		priceField = new Label("0");
 
+		discountLabel = new Label("Discount: ");
+		discountLabel.setVisible(false);
+		discountAmount = new Label();
+		discountAmount.setVisible(false);
+
 		Stage stage = new Stage();
 		stage.setTitle("CLIENT VIEW");
 		stage.setResizable(false);
-		stage.setX(775);
+		stage.setX(900);
 		stage.setY(20);
 		GridPane grid = new GridPane();
 		grid.setVgap(10);
-		grid.add(tableView, 0, 0, 2, 1);
+		grid.add(tableView, 0, 0, 4, 1);
 		grid.add(priceLabel, 0, 1);
 		grid.add(priceField, 1, 1);
+		grid.add(discountLabel, 2, 1);
+		grid.add(discountAmount, 3, 1);
 		grid.setPadding(new Insets(20, 20, 20, 20));
+		grid.setVgap(5);
+		grid.setHgap(5);
+		grid.setMargin(discountLabel, new Insets(0, 0, 0, 100));
 		Scene scene = new Scene(grid, 500, 500);
 		stage.setScene(scene);
 		stage.sizeToScene();
@@ -92,4 +104,10 @@ public class ClientView {
     public void clearTotalPrice() {
         priceField.setText("0");
     }
+
+	public void showDiscount(double discount) {
+		discountLabel.setVisible(true);
+		discountAmount.setText(String.format("%.2f", discount));
+		discountAmount.setVisible(true);
+	}
 }

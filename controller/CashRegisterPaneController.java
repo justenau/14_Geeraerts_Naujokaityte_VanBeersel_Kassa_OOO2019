@@ -49,9 +49,6 @@ public class CashRegisterPaneController {
         view.resetTotalPrice();
     }
 
-    ;
-
-
     public void continueSaleOnHold() {
         if (!context.continueSaleOnHold()) {
             view.showErrorMessage("Unable to continue sale on hold", "Current active sale must be finished!");
@@ -60,5 +57,17 @@ public class CashRegisterPaneController {
         view.updateTableList(context.getActiveSaleSoldItems());
         double price = context.getActiveSalePrice();
         view.setTotalPrice(price);
+    }
+
+    public boolean closeSale() {
+        if (context.getActiveSaleSoldItems().isEmpty()) {
+            view.showErrorMessage("No products bought", "There are no products!");
+            return false;
+        } else {
+            double discount = context.getDiscount();
+            view.showDiscount(discount);
+            context.closeSale();
+        }
+        return false;
     }
 }

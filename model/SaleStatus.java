@@ -4,5 +4,6 @@ public enum SaleStatus {
     ACTIVE,
     ON_HOLD,
     CANCELLED,
+    CLOSED,
     FINISHED,
 }

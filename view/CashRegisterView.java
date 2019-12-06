@@ -15,7 +15,7 @@ public class CashRegisterView {
 		stage.setX(20);
 		stage.setY(20);
 		Group root = new Group();
-		Scene scene = new Scene(root, 750, 500);
+        Scene scene = new Scene(root, 800, 500);
         mainPane.prefHeightProperty().bind(scene.heightProperty());
         mainPane.prefWidthProperty().bind(scene.widthProperty());
         root.getChildren().add(mainPane);

@@ -1,5 +1,6 @@
 package model.discount;
 
+import model.Article;
 import model.Sale;
 
 /**
@@ -22,7 +23,13 @@ public class GroupDiscount implements DiscountStrategy {
 
     @Override
     public double calculateDiscount(Sale sale) {
-        return 0;
+        double discount = 0;
+        for (Article article : sale.getArticles()) {
+            if (article.getGroup().equals(this.group)) {
+                discount += article.getPrice() * percentage / 100;
+            }
+        }
+        return discount;
     }
 
 }

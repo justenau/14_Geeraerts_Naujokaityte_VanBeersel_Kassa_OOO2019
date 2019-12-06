@@ -19,13 +19,17 @@ public class CashRegisterPane extends GridPane {
 
     private TableView<Article> table;
     private Label priceField;
+    private Label discountLabel;
+    private Label discountAmount;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
         controller.setView(this);
 
         Label totalLabel = new Label("Total price: ");
         priceField = new Label("0");
+        priceField.setPrefWidth(100);
         TextField codeInput = new TextField();
+        codeInput.setPrefWidth(250);
         codeInput.setPromptText("Enter product code");
         codeInput.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -35,8 +39,18 @@ public class CashRegisterPane extends GridPane {
             }
         });
 
+        discountLabel = new Label("Discount: ");
+        discountLabel.setVisible(false);
+        discountAmount = new Label();
+        discountAmount.setVisible(false);
+        discountAmount.setPrefWidth(150);
+
         Button onHoldBtn = new Button("Put on hold");
-        Button getBackBtn = new Button("Continue previous sale");
+        onHoldBtn.setPrefWidth(190);
+        Button getBackBtn = new Button("Continue sale on hold");
+        getBackBtn.setPrefWidth(250);
+        Button closeSaleBtn = new Button("Close sale");
+        closeSaleBtn.setPrefWidth(170);
 
         onHoldBtn.setOnAction(a -> {
             controller.putSaleOnHold();
@@ -51,15 +65,24 @@ public class CashRegisterPane extends GridPane {
             onHoldBtn.setDisable(false);
         });
 
+        closeSaleBtn.setOnAction(a -> {
+            if (controller.closeSale()) {
+                onHoldBtn.setDisable(true);
+            }
+        });
+
         this.add(totalLabel, 0, 0);
         this.add(priceField, 1, 0);
-        this.add(codeInput, 2, 0);
+        this.add(discountLabel, 2, 0);
+        this.add(discountAmount, 3, 0);
+        this.add(codeInput, 4, 0);
         this.add(onHoldBtn, 0, 2);
         this.add(getBackBtn, 1, 2);
+        this.add(closeSaleBtn, 2, 2);
         this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
         this.setHgap(5);
-        setMargin(codeInput, new Insets(0, 0, 0, 200));
+        setMargin(codeInput, new Insets(0, 0, 0, 100));
 
     }
 
@@ -84,7 +107,7 @@ public class CashRegisterPane extends GridPane {
         });
         table.getColumns().addAll(colDescription, colPrice);
         table.setPrefWidth(500);
-        this.add(table, 0, 1, 3, 1);
+        this.add(table, 0, 1, 5, 1);
     }
 
     public void showErrorMessage(String header, String message) {
@@ -109,5 +132,11 @@ public class CashRegisterPane extends GridPane {
 
     public void setTotalPrice(double price) {
         priceField.setText(String.format("%.2f", price));
+    }
+
+    public void showDiscount(double discount) {
+        discountLabel.setVisible(true);
+        discountAmount.setText(String.format("%.2f", discount));
+        discountAmount.setVisible(true);
     }
 }

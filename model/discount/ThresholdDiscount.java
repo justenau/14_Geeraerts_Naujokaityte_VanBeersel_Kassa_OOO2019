@@ -1,5 +1,6 @@
 package model.discount;
 
+import model.Article;
 import model.Sale;
 
 /**
@@ -11,9 +12,8 @@ public class ThresholdDiscount implements DiscountStrategy {
     private double amount;
 
     public void setAmount(double amount) {
+        this.amount = amount;
     }
-
-    ;
 
     @Override
     public void setPercentage(double percentage) {
@@ -22,7 +22,11 @@ public class ThresholdDiscount implements DiscountStrategy {
 
     @Override
     public double calculateDiscount(Sale sale) {
-        return 0;
+        double price = 0;
+        for (Article article : sale.getArticles()) {
+            price += article.getPrice();
+        }
+        return price > amount ? price * percentage / 100 : 0;
     }
 
 }
