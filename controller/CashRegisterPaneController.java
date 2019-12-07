@@ -75,6 +75,16 @@ public class CashRegisterPaneController implements Observer {
         }
     }
 
+    public void deleteArticle(Article article){
+        if (article == null){
+            view.showErrorMessage("No item selected", "Select an item first!");
+        } else {
+            view.removeFromTable();
+            context.removeSoldItem(article);
+            view.updateTotalPrice(-article.getPrice());
+        }
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof SaleStatus && arg == SaleStatus.CANCELLED) {
