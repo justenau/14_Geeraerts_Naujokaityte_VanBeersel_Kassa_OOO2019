@@ -57,5 +57,4 @@ public class SettingsPaneController {
                     "Changes could not be saved.");
         }
     }
-
 }

@@ -44,7 +44,6 @@ public class CashRegisterPaneController implements Observer {
             view.showErrorMessage("Bad input", "Product code must be a number!");
         }
     }
-
     public void putSaleOnHold() {
         if (!context.putActiveSaleOnHold()) {
             view.showErrorMessage("Unable to put sale on hold", "A sale on hold already exists!");
@@ -82,4 +81,5 @@ public class CashRegisterPaneController implements Observer {
             view.disableSaleOnHold();
         }
     }
+
 }
