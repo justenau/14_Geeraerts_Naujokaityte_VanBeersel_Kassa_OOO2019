@@ -73,6 +73,13 @@ public class CashRegisterPane extends GridPane {
             }
         });
 
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setPrefWidth(170);
+
+        deleteBtn.setOnAction(a -> {
+            controller.deleteArticle(table.getSelectionModel().getSelectedItem()); //article
+        });
+
         this.add(totalLabel, 0, 0);
         this.add(priceField, 1, 0);
         this.add(discountLabel, 2, 0);
@@ -81,6 +88,7 @@ public class CashRegisterPane extends GridPane {
         this.add(onHoldBtn, 0, 2);
         this.add(getBackBtn, 1, 2);
         this.add(closeSaleBtn, 2, 2);
+        this.add(deleteBtn, 3, 2);
         this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
         this.setHgap(5);
@@ -108,9 +116,12 @@ public class CashRegisterPane extends GridPane {
             return dp.asObject();
         });
         table.getColumns().addAll(colDescription, colPrice);
+
         table.setPrefWidth(500);
         this.add(table, 0, 1, 5, 1);
     }
+
+
 
     public void showErrorMessage(String header, String message) {
         showMessage(Alert.AlertType.ERROR, header, message);
@@ -149,5 +160,11 @@ public class CashRegisterPane extends GridPane {
     public void disableSaleOnHold() {
         showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been cancelled");
         getBackBtn.setDisable(true);
+    }
+
+    //removes it from Cashregisters point of view (maybe better for CashRegisterViewController?) Not sure
+    public void removeFromTable(){
+        Article article = table.getSelectionModel().getSelectedItem();
+        table.getItems().remove(article);
     }
 }

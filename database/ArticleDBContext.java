@@ -48,6 +48,13 @@ public class ArticleDBContext extends Observable {
         notifyObservers(article);
     }
 
+    public void removeSoldItem(Article article) {
+        Sale activeSale = getCurrentSale();
+        activeSale.removeArticle(article);
+        setChanged();
+        notifyObservers(article);
+    }
+
     public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
             if (sale.getSaleStatus() == SaleStatus.ACTIVE || sale.getSaleStatus() == SaleStatus.CLOSED)

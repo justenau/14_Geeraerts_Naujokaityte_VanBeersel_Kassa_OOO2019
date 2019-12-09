@@ -44,7 +44,6 @@ public class CashRegisterPaneController implements Observer {
             view.showErrorMessage("Bad input", "Product code must be a number!");
         }
     }
-
     public void putSaleOnHold() {
         if (!context.putActiveSaleOnHold()) {
             view.showErrorMessage("Unable to put sale on hold", "A sale on hold already exists!");
@@ -76,10 +75,21 @@ public class CashRegisterPaneController implements Observer {
         }
     }
 
+    public void deleteArticle(Article article){
+        if (article == null){
+            view.showErrorMessage("No item selected", "Select an item first!");
+        } else {
+            view.removeFromTable();
+            context.removeSoldItem(article);
+            view.updateTotalPrice(-article.getPrice());
+        }
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof SaleStatus && arg == SaleStatus.CANCELLED) {
             view.disableSaleOnHold();
         }
     }
+
 }

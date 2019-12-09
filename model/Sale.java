@@ -24,6 +24,10 @@ public class Sale {
         this.articles.add(article);
     }
 
+    public void removeArticle(Article article){
+        this.articles.remove(article);
+    }
+
     public SaleStatus getSaleStatus() {
         return saleStatus;
     }

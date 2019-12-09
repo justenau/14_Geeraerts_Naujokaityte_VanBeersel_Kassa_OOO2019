@@ -54,4 +54,15 @@ public class Article {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    @Override
+    public String toString() {
+        return "[" +
+                "" + code +
+                ", " + description +
+                ", " + group +
+                ", " + price +
+                ", " + stock +
+                ']';
+    }
 }
