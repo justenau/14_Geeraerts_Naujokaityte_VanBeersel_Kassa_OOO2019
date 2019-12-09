@@ -15,6 +15,7 @@ import java.util.Observer;
 public class ClientViewController implements Observer {
 
     private ClientView view;
+    private int itemCount = 0;
 
     public ClientViewController(ArticleDBContext context) {
         context.addObserver(this);
@@ -28,8 +29,13 @@ public class ClientViewController implements Observer {
     public void update(Observable o, Object arg) {
         if (arg instanceof Article) {
             Article article = (Article) arg;
-            view.updateList(article);
-            view.updateTotalPrice(article.getPrice());
+            if (((ArticleDBContext) o).getActiveSalePrice() > view.getTotalPrice()) {
+                view.addToList(article);
+                view.updateTotalPrice(article.getPrice());
+            } else {
+                view.removeFromList(article);
+                view.updateTotalPrice(-article.getPrice());
+            }
         } else if (arg instanceof SaleStatus) {
             SaleStatus saleStatus = (SaleStatus) arg;
             if (saleStatus == SaleStatus.ON_HOLD) {
@@ -41,7 +47,7 @@ public class ClientViewController implements Observer {
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;
             for (Article article : articles) {
-                view.updateList(article);
+                view.addToList(article);
                 view.updateTotalPrice(article.getPrice());
             }
         }

@@ -164,7 +164,6 @@ public class CashRegisterPane extends GridPane {
 
     //removes it from Cashregisters point of view (maybe better for CashRegisterViewController?) Not sure
     public void removeFromTable(){
-        Article article = table.getSelectionModel().getSelectedItem();
-        table.getItems().remove(article);
+        table.getItems().remove(table.getSelectionModel().getSelectedCells());
     }
 }

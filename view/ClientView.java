@@ -79,7 +79,7 @@ public class ClientView {
 		tableView.setPrefWidth(500);
 	}
 
-	public void updateList(Article article) {
+	public void addToList(Article article) {
 		for (Map.Entry<Article, Integer> entry : tableView.getItems()) {
 			if (entry.getKey().equals(article)) {
 				entry.setValue(entry.getValue() + 1);
@@ -109,5 +109,24 @@ public class ClientView {
 		discountLabel.setVisible(true);
 		discountAmount.setText(String.format("%.2f", discount));
 		discountAmount.setVisible(true);
+	}
+
+	public double getTotalPrice() {
+		return Double.parseDouble(priceField.getText());
+	}
+
+	public void removeFromList(Article article) {
+		for (Map.Entry<Article, Integer> entry : tableView.getItems()) {
+			if (entry.getKey().equals(article)) {
+				int itemCount = entry.getValue() - 1;
+				if (itemCount == 0) {
+					tableView.getItems().remove(entry);
+				} else {
+					entry.setValue(itemCount);
+				}
+				tableView.refresh();
+				return;
+			}
+		}
 	}
 }
