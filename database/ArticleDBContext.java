@@ -1,9 +1,7 @@
 package database;
 
 import javafx.collections.ObservableList;
-import model.Article;
-import model.Sale;
-import model.SaleStatus;
+import model.*;
 import model.discount.DiscountStrategy;
 import model.receipt.Receipt;
 import model.receipt.ReceiptFactory;
@@ -61,7 +59,7 @@ public class ArticleDBContext extends Observable {
 
     public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
-            if (sale.getSaleStatus() == SaleStatus.ACTIVE || sale.getSaleStatus() == SaleStatus.CLOSED)
+            if (sale.getCurrentState().getClass() == ActiveState.class || sale.getCurrentState().getClass() == ClosedState.class)
                 return sale;
         }
         return null;
@@ -92,13 +90,13 @@ public class ArticleDBContext extends Observable {
 
     public boolean putActiveSaleOnHold() {
         for (Sale sale : getArticleDB().getSales()) {
-            if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
+            if (sale.getCurrentState().getClass() == OnHoldState.class) {
                 return false;
             }
         }
-        getCurrentSale().setSaleStatus(SaleStatus.ON_HOLD);
+        getCurrentSale().setOnHoldState();
         setChanged();
-        notifyObservers(SaleStatus.ON_HOLD);
+        notifyObservers(OnHoldState.class);
         startNewSale();
         return true;
     }
@@ -108,13 +106,12 @@ public class ArticleDBContext extends Observable {
         for (Article article : getActiveSaleSoldItems()) {
             price += article.getPrice();
         }
-        ;
         return price;
     }
 
     public Sale getSaleOnHold() {
         for (Sale sale : articleDB.getSales()) {
-            if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
+            if (sale.getCurrentState().getClass() == OnHoldState.class) {
                 return sale;
             }
         }
@@ -126,7 +123,7 @@ public class ArticleDBContext extends Observable {
         Sale saleOnHold = getSaleOnHold();
         if (currentSale.getArticles().isEmpty() && saleOnHold != null) {
             articleDB.getSales().remove(currentSale);
-            saleOnHold.setSaleStatus(SaleStatus.ACTIVE);
+            saleOnHold.setActiveState();
             setChanged();
             notifyObservers(getActiveSaleSoldItems());
             return true;
@@ -149,18 +146,17 @@ public class ArticleDBContext extends Observable {
         Sale current = getCurrentSale();
         if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
             onHoldClientCounter = 0;
-            getSaleOnHold().setSaleStatus(SaleStatus.CANCELLED);
+            getSaleOnHold().setCancelledState();
             setChanged();
-            notifyObservers(SaleStatus.CANCELLED);
+            notifyObservers(OnHoldState.class);
         }
         current.setDiscount(getDiscount());
-        current.setSaleStatus(SaleStatus.CLOSED);
+        getCurrentSale().setClosedState();
         setChanged();
-        notifyObservers(SaleStatus.CLOSED);
+        notifyObservers(ClosedState.class);
         //TODO: move to after payment!
         printReceipt(current);
     }
-
     //TODO: move somewhere else (maybe console controller?)
     public void printReceipt(Sale sale) {
         String receiptMsg;

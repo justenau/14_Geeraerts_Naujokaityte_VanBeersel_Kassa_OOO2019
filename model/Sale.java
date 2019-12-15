@@ -20,9 +20,6 @@ public class Sale {
 
     private SaleState currentState;
 
-
-    private SaleStatus saleStatus;
-
     public Sale() {
         this.articles = FXCollections.observableArrayList();
 
@@ -32,8 +29,6 @@ public class Sale {
         finishedState = new FinishedState(this);
         onHoldState = new OnHoldState(this);
         currentState = activeState;
-
-        this.saleStatus = SaleStatus.ACTIVE;
     }
 
     public ObservableList<Article> getArticles() {
@@ -95,15 +90,6 @@ public class Sale {
     public OnHoldState getOnHoldState(){
         return onHoldState;
     }
-
-    public SaleStatus getSaleStatus() {
-        return saleStatus;
-    }
-
-    public void setSaleStatus(SaleStatus saleStatus) {
-        this.saleStatus = saleStatus;
-    }
-
     public HashMap<Article, Integer> getDistinctArticles() {
         HashMap<Article, Integer> distinctArticles = new HashMap<>();
         for (Article article : this.articles) {

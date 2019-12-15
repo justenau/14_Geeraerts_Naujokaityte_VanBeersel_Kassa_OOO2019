@@ -2,8 +2,7 @@ package controller;
 
 import database.ArticleDBContext;
 import javafx.collections.ObservableList;
-import model.Article;
-import model.SaleStatus;
+import model.*;
 import view.ClientView;
 
 import java.util.Observable;
@@ -36,14 +35,11 @@ public class ClientViewController implements Observer {
                 view.removeFromList(article);
                 view.updateTotalPrice(-article.getPrice());
             }
-        } else if (arg instanceof SaleStatus) {
-            SaleStatus saleStatus = (SaleStatus) arg;
-            if (saleStatus == SaleStatus.ON_HOLD) {
-                view.clearList();
-                view.clearTotalPrice();
-            } else if (saleStatus == SaleStatus.CLOSED) {
-                view.showDiscount(((ArticleDBContext) o).getDiscount());
-            }
+        } else if (arg == OnHoldState.class) {
+            view.clearList();
+            view.clearTotalPrice();
+        } else if (arg == ClosedState.class) {
+            view.showDiscount(((ArticleDBContext) o).getDiscount());
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;
             for (Article article : articles) {
