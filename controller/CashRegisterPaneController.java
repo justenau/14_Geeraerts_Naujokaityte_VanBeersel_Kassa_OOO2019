@@ -2,7 +2,7 @@ package controller;
 
 import database.ArticleDBContext;
 import model.Article;
-import model.SaleStatus;
+import model.CancelledState;
 import view.panels.CashRegisterPane;
 
 import java.util.Observable;
@@ -87,7 +87,7 @@ public class CashRegisterPaneController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof SaleStatus && arg == SaleStatus.CANCELLED) {
+        if (arg == CancelledState.class) {
             view.disableSaleOnHold();
         }
     }
