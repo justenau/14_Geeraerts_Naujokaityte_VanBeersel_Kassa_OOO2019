@@ -28,7 +28,8 @@ public class SettingsPaneController {
     }
 
     public void saveChanges(String databaseValue, String loadSaveValue, String discountType,
-                            String discountValue, String discountAdditional) {
+                            String discountValue, String discountAdditional, String receiptMsg, String receiptClosingMessage,
+                            boolean receiptDateTime, boolean receiptTotDisc, boolean receiptVAT) {
         try {
             Properties properties = new Properties();
             properties.load(new FileInputStream("src/files/config.properties"));
@@ -48,6 +49,11 @@ public class SettingsPaneController {
                 context.setDiscountStrategy(discountStrategy);
                 properties.setProperty("discount", String.format("%s-%s-%s", discountType, discountValue, discountAdditional));
             }
+            properties.setProperty("receiptMsg", receiptMsg);
+            properties.setProperty("receiptClosing", receiptClosingMessage);
+            properties.setProperty("receiptDateTime", String.valueOf(receiptDateTime));
+            properties.setProperty("receiptTotDisc", String.valueOf(receiptTotDisc));
+            properties.setProperty("receiptVAT", String.valueOf(receiptVAT));
             properties.store(new FileOutputStream("src/files/config.properties"), null);
 
             view.showMessage(Alert.AlertType.INFORMATION, "Changes saved!",
