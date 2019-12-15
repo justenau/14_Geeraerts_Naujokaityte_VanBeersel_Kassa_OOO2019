@@ -14,7 +14,6 @@ import view.panels.LogPane;
 import view.panels.ProductOverviewPane;
 import view.panels.SettingsPane;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Locale;
@@ -26,7 +25,6 @@ public class Main extends Application {
 		ArticleDBContext articleDBContext = new ArticleDBContext();
         Properties properties = new Properties();
 		try {
-            System.out.println(new File(".").getAbsolutePath());
             properties.load(new FileInputStream("src/files/config.properties"));
             String dbType = properties.getProperty("database");
             ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(dbType);

@@ -5,12 +5,16 @@ import model.Article;
 import model.Sale;
 import model.SaleStatus;
 import model.discount.DiscountStrategy;
+import model.receipt.Receipt;
+import model.receipt.ReceiptFactory;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Properties;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
@@ -144,14 +148,42 @@ public class ArticleDBContext extends Observable {
     }
 
     public void closeSale() {
+        Sale current = getCurrentSale();
         if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
             onHoldClientCounter = 0;
             getSaleOnHold().setSaleStatus(SaleStatus.CANCELLED);
             setChanged();
             notifyObservers(SaleStatus.CANCELLED);
         }
-        getCurrentSale().setSaleStatus(SaleStatus.CLOSED);
+        current.setDiscount(getDiscount());
+        current.setSaleStatus(SaleStatus.CLOSED);
         setChanged();
         notifyObservers(SaleStatus.CLOSED);
+        //TODO: move to after payment!
+        printReceipt(current);
+    }
+
+    //TODO: move somewhere else (maybe console controller?)
+    public void printReceipt(Sale sale) {
+        String receiptMsg;
+        boolean receiptDateTime;
+        boolean receiptTotDisc;
+        boolean receiptVAT;
+        String receiptClosing;
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("src/files/config.properties"));
+            receiptMsg = properties.getProperty("receiptMsg");
+            receiptDateTime = Boolean.parseBoolean(properties.getProperty("receiptDateTime"));
+            receiptTotDisc = Boolean.parseBoolean(properties.getProperty("receiptTotDisc"));
+            receiptVAT = Boolean.parseBoolean(properties.getProperty("receiptVAT"));
+            receiptClosing = properties.getProperty("receiptClosing");
+            Receipt receipt = ReceiptFactory.getInstance()
+                    .createReceipt(sale, receiptMsg, receiptDateTime, receiptTotDisc, receiptVAT, receiptClosing);
+            receipt.print();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
