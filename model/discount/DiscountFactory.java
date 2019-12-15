@@ -9,8 +9,6 @@ public class DiscountFactory {
     private DiscountFactory() {
     }
 
-    ;
-
     public static DiscountFactory getInstance() {
         if (instance == null) {
             instance = new DiscountFactory();
