@@ -9,11 +9,15 @@ public class VATDecorator extends ReceiptDecorator {
     @Override
     public void print() {
         decoratedReceipt.print();
-        addVAT();
+        addVATInfo();
     }
 
-    //TODO: how to calculate it? what is BTW gedrag?
-    public void addVAT() {
-        System.out.printf("TO DO");
+    public void addVATInfo() {
+        double priceWithVAT = getSale().getPriceWithoutDiscount() - getSale().getDiscount();
+        double priceWithoutVAT = priceWithVAT * 100 / 106;
+        double VAT = priceWithVAT - priceWithoutVAT;
+
+        System.out.printf("Price paid excluding VAT(6%%): %.2f%n", priceWithoutVAT);
+        System.out.printf("VAT(6%%): %.2f%n", VAT);
     }
 }

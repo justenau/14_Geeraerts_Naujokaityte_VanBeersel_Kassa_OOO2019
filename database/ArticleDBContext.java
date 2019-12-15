@@ -91,7 +91,6 @@ public class ArticleDBContext extends Observable {
     }
 
     public boolean putActiveSaleOnHold() {
-        System.out.println(getCurrentSale().getSaleStatus());
         for (Sale sale : getArticleDB().getSales()) {
             if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
                 return false;
@@ -114,7 +113,6 @@ public class ArticleDBContext extends Observable {
     }
 
     public Sale getSaleOnHold() {
-        System.out.println(getCurrentSale().getSaleStatus());
         for (Sale sale : articleDB.getSales()) {
             if (sale.getSaleStatus() == SaleStatus.ON_HOLD) {
                 return sale;
