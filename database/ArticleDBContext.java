@@ -144,6 +144,10 @@ public class ArticleDBContext extends Observable {
         return 0;
     }
 
+    public double getAmountToPay() {
+        return getCurrentSale().getPriceWithoutDiscount() - getDiscount();
+    }
+
     public void closeSale() throws OperationNotAvailable {
         Sale current = getCurrentSale();
         if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {

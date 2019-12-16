@@ -40,12 +40,14 @@ public class ClientViewController implements Observer {
             }
             if (context.getCurrentSale().getCurrentState() instanceof ClosedState) {
                 view.showDiscount(context.getDiscount());
+                view.showAmountToPay(context.getAmountToPay());
             }
         } else if (arg == SaleEventEnum.PUT_ON_HOLD) {
             view.clearList();
             view.clearTotalPrice();
         } else if (arg == SaleEventEnum.CLOSE) {
             view.showDiscount(context.getDiscount());
+            view.showAmountToPay(context.getAmountToPay());
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;
             for (Article article : articles) {

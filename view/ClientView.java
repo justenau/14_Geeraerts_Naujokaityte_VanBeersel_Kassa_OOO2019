@@ -24,6 +24,8 @@ public class ClientView {
 	private TableView<Map.Entry<Article, Integer>> tableView;
 	private Label discountLabel;
 	private Label discountAmount;
+	private Label amountToPayLabel;
+	private Label amountToPay;
 
 	public ClientView(ClientViewController controller) {
 		controller.setView(this);
@@ -38,6 +40,11 @@ public class ClientView {
 		discountAmount = new Label();
 		discountAmount.setVisible(false);
 
+		amountToPayLabel = new Label("Amount to pay: ");
+		amountToPayLabel.setVisible(false);
+		amountToPay = new Label();
+		amountToPay.setVisible(false);
+
 		Stage stage = new Stage();
 		stage.setTitle("CLIENT VIEW");
 		stage.setResizable(false);
@@ -50,6 +57,8 @@ public class ClientView {
 		grid.add(priceField, 1, 1);
 		grid.add(discountLabel, 2, 1);
 		grid.add(discountAmount, 3, 1);
+		grid.add(amountToPayLabel, 0, 2);
+		grid.add(amountToPay, 1, 2);
 		grid.setPadding(new Insets(20, 20, 20, 20));
 		grid.setVgap(5);
 		grid.setHgap(5);
@@ -109,6 +118,12 @@ public class ClientView {
 		discountLabel.setVisible(true);
 		discountAmount.setText(String.format("%.2f", discount));
 		discountAmount.setVisible(true);
+	}
+
+	public void showAmountToPay(double amount) {
+		amountToPayLabel.setVisible(true);
+		amountToPay.setText(String.format("%.2f", amount));
+		amountToPay.setVisible(true);
 	}
 
 	public double getTotalPrice() {

@@ -81,7 +81,9 @@ public class CashRegisterPaneController implements Observer {
             return false;
         } else {
             double discount = context.getDiscount();
+            double amountToPay = context.getAmountToPay();
             view.showDiscount(discount);
+            view.showAmountToPay(amountToPay);
             try {
                 context.closeSale();
             } catch (OperationNotAvailable operationNotAvailable) {
@@ -101,6 +103,7 @@ public class CashRegisterPaneController implements Observer {
             view.updateTotalPrice(-article.getPrice());
             if (context.getCurrentSale().getCurrentState() instanceof ClosedState) {
                 view.showDiscount(context.getDiscount());
+                view.showAmountToPay(context.getAmountToPay());
             }
         }
     }

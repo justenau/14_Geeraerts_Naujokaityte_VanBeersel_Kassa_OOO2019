@@ -21,6 +21,8 @@ public class CashRegisterPane extends GridPane {
     private Label priceField;
     private Label discountLabel;
     private Label discountAmount;
+    private Label amountToPayLabel;
+    private Label amountToPay;
     private Button getBackBtn;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
@@ -45,6 +47,11 @@ public class CashRegisterPane extends GridPane {
         discountAmount = new Label();
         discountAmount.setVisible(false);
         discountAmount.setPrefWidth(150);
+
+        amountToPayLabel = new Label("Amount to pay: ");
+        amountToPayLabel.setVisible(false);
+        amountToPay = new Label();
+        amountToPay.setVisible(false);
 
         Button onHoldBtn = new Button("Put on hold");
         onHoldBtn.setPrefWidth(190);
@@ -84,11 +91,13 @@ public class CashRegisterPane extends GridPane {
         this.add(priceField, 1, 0);
         this.add(discountLabel, 2, 0);
         this.add(discountAmount, 3, 0);
+        this.add(amountToPayLabel, 0, 1);
+        this.add(amountToPay, 1, 1);
         this.add(codeInput, 4, 0);
-        this.add(onHoldBtn, 0, 2);
-        this.add(getBackBtn, 1, 2);
-        this.add(closeSaleBtn, 2, 2);
-        this.add(deleteBtn, 3, 2);
+        this.add(onHoldBtn, 0, 3);
+        this.add(getBackBtn, 1, 3);
+        this.add(closeSaleBtn, 2, 3);
+        this.add(deleteBtn, 3, 3);
         this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
         this.setHgap(5);
@@ -118,7 +127,7 @@ public class CashRegisterPane extends GridPane {
         table.getColumns().addAll(colDescription, colPrice);
 
         table.setPrefWidth(500);
-        this.add(table, 0, 1, 5, 1);
+        this.add(table, 0, 2, 5, 1);
     }
 
 
@@ -155,6 +164,12 @@ public class CashRegisterPane extends GridPane {
         discountLabel.setVisible(true);
         discountAmount.setText(String.format("%.2f", discount));
         discountAmount.setVisible(true);
+    }
+
+    public void showAmountToPay(double amount) {
+        amountToPayLabel.setVisible(true);
+        amountToPay.setText(String.format("%.2f", amount));
+        amountToPay.setVisible(true);
     }
 
     public void disableSaleOnHold() {
