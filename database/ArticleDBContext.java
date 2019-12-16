@@ -1,10 +1,15 @@
 package database;
 
+import Exceptions.OperationNotAvailable;
 import javafx.collections.ObservableList;
-import model.*;
+import model.Article;
 import model.discount.DiscountStrategy;
 import model.receipt.Receipt;
 import model.receipt.ReceiptFactory;
+import model.sale.ActiveState;
+import model.sale.ClosedState;
+import model.sale.OnHoldState;
+import model.sale.Sale;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,7 +48,7 @@ public class ArticleDBContext extends Observable {
         articleDB.save(articles);
     }
 
-    public void addSoldItem(Article article) {
+    public void addSoldItem(Article article) throws OperationNotAvailable {
         Sale activeSale = getCurrentSale();
         activeSale.addArticle(article);
         setChanged();
@@ -59,7 +64,7 @@ public class ArticleDBContext extends Observable {
 
     public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
-            if (sale.getCurrentState().getClass() == ActiveState.class || sale.getCurrentState().getClass() == ClosedState.class)
+            if (sale.getCurrentState() instanceof ActiveState || sale.getCurrentState() instanceof ClosedState)
                 return sale;
         }
         return null;
@@ -88,9 +93,9 @@ public class ArticleDBContext extends Observable {
         articleDB.getSales().add(new Sale());
     }
 
-    public boolean putActiveSaleOnHold() {
+    public boolean putActiveSaleOnHold() throws OperationNotAvailable {
         for (Sale sale : getArticleDB().getSales()) {
-            if (sale.getCurrentState().getClass() == OnHoldState.class) {
+            if (sale.getCurrentState() instanceof OnHoldState) {
                 return false;
             }
         }
@@ -118,7 +123,7 @@ public class ArticleDBContext extends Observable {
         return null;
     }
 
-    public boolean continueSaleOnHold() {
+    public boolean continueSaleOnHold() throws OperationNotAvailable {
         Sale currentSale = getCurrentSale();
         Sale saleOnHold = getSaleOnHold();
         if (currentSale.getArticles().isEmpty() && saleOnHold != null) {
@@ -142,7 +147,7 @@ public class ArticleDBContext extends Observable {
         return 0;
     }
 
-    public void closeSale() {
+    public void closeSale() throws OperationNotAvailable {
         Sale current = getCurrentSale();
         if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
             onHoldClientCounter = 0;

@@ -1,7 +1,9 @@
-package model;
+package model.sale;
 
+import Exceptions.OperationNotAvailable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.Article;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,8 +37,8 @@ public class Sale {
         return articles;
     }
 
-    public void addArticle(Article article) {
-        this.articles.add(article);
+    public void addArticle(Article article) throws OperationNotAvailable {
+        currentState.addArticle(article);
     }
 
     public void removeArticle(Article article) {
@@ -51,23 +53,23 @@ public class Sale {
         return currentState;
     }
 
-    public void setActiveState() {
+    public void setActiveState() throws OperationNotAvailable {
         currentState.putOnActive();
     }
 
-    public void setCancelledState() {
+    public void setCancelledState() throws OperationNotAvailable {
         currentState.cancel();
     }
 
-    public void setClosedState() {
+    public void setClosedState() throws OperationNotAvailable {
         currentState.close();
     }
 
-    public void setFinishedState() {
+    public void setFinishedState() throws OperationNotAvailable {
         currentState.finish();
     }
 
-    public void setOnHoldState() {
+    public void setOnHoldState() throws OperationNotAvailable {
         currentState.putOnHold();
     }
 

@@ -1,6 +1,6 @@
 package model.receipt;
 
-import model.Sale;
+import model.sale.Sale;
 
 import java.time.LocalDateTime;
 

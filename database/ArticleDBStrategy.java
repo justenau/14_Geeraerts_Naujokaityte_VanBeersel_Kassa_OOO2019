@@ -1,7 +1,7 @@
 package database;
 
 import model.Article;
-import model.Sale;
+import model.sale.Sale;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

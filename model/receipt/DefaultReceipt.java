@@ -1,7 +1,7 @@
 package model.receipt;
 
 import model.Article;
-import model.Sale;
+import model.sale.Sale;
 
 import java.util.Map;
 

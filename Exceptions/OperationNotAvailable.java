@@ -9,4 +9,9 @@ public class OperationNotAvailable extends Exception {
     public OperationNotAvailable(String message){
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return this.message;
+    }
 }

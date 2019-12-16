@@ -2,7 +2,9 @@ package controller;
 
 import database.ArticleDBContext;
 import javafx.collections.ObservableList;
-import model.*;
+import model.Article;
+import model.sale.ClosedState;
+import model.sale.OnHoldState;
 import view.ClientView;
 
 import java.util.Observable;
@@ -26,20 +28,24 @@ public class ClientViewController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        ArticleDBContext context = (ArticleDBContext) o;
         if (arg instanceof Article) {
             Article article = (Article) arg;
-            if (((ArticleDBContext) o).getActiveSalePrice() > view.getTotalPrice()) {
+            if (context.getActiveSalePrice() > view.getTotalPrice()) {
                 view.addToList(article);
                 view.updateTotalPrice(article.getPrice());
             } else {
                 view.removeFromList(article);
                 view.updateTotalPrice(-article.getPrice());
             }
+            if (context.getCurrentSale().getCurrentState() instanceof ClosedState) {
+                view.showDiscount(context.getDiscount());
+            }
         } else if (arg == OnHoldState.class) {
             view.clearList();
             view.clearTotalPrice();
         } else if (arg == ClosedState.class) {
-            view.showDiscount(((ArticleDBContext) o).getDiscount());
+            view.showDiscount(context.getDiscount());
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;
             for (Article article : articles) {

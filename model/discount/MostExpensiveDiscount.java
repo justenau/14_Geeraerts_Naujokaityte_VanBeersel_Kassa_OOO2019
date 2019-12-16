@@ -1,7 +1,7 @@
 package model.discount;
 
 import model.Article;
-import model.Sale;
+import model.sale.Sale;
 
 /**
  * @author Justė Naujokaitytė

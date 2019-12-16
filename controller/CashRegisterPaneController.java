@@ -1,8 +1,10 @@
 package controller;
 
+import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
 import model.Article;
-import model.CancelledState;
+import model.sale.CancelledState;
+import model.sale.ClosedState;
 import view.panels.CashRegisterPane;
 
 import java.util.Observable;
@@ -42,25 +44,35 @@ public class CashRegisterPaneController implements Observer {
             view.updateTotalPrice(article.getPrice());
         } catch (NumberFormatException e) {
             view.showErrorMessage("Bad input", "Product code must be a number!");
+        } catch (OperationNotAvailable e) {
+            view.showErrorMessage("Article cannot be added", e.getMessage());
         }
     }
     public void putSaleOnHold() {
-        if (!context.putActiveSaleOnHold()) {
-            view.showErrorMessage("Unable to put sale on hold", "A sale on hold already exists!");
-            return;
+        try {
+            if (!context.putActiveSaleOnHold()) {
+                view.showErrorMessage("Unable to put sale on hold", "A sale on hold already exists!");
+                return;
+            }
+            view.updateTableList(context.getActiveSaleSoldItems());
+            view.resetTotalPrice();
+        } catch (OperationNotAvailable operationNotAvailable) {
+            view.showErrorMessage("Unable to put sale on hold", operationNotAvailable.getMessage());
         }
-        view.updateTableList(context.getActiveSaleSoldItems());
-        view.resetTotalPrice();
     }
 
     public void continueSaleOnHold() {
-        if (!context.continueSaleOnHold()) {
-            view.showErrorMessage("Unable to continue sale on hold", "Current active sale must be finished!");
-            return;
+        try {
+            if (!context.continueSaleOnHold()) {
+                view.showErrorMessage("Unable to continue sale on hold", "Current active sale must be finished!");
+                return;
+            }
+            view.updateTableList(context.getActiveSaleSoldItems());
+            double price = context.getActiveSalePrice();
+            view.setTotalPrice(price);
+        } catch (OperationNotAvailable operationNotAvailable) {
+            view.showErrorMessage("Unable to continue sale on hold", operationNotAvailable.getMessage());
         }
-        view.updateTableList(context.getActiveSaleSoldItems());
-        double price = context.getActiveSalePrice();
-        view.setTotalPrice(price);
     }
 
     public boolean closeSale() {
@@ -70,7 +82,12 @@ public class CashRegisterPaneController implements Observer {
         } else {
             double discount = context.getDiscount();
             view.showDiscount(discount);
-            context.closeSale();
+            try {
+                context.closeSale();
+            } catch (OperationNotAvailable operationNotAvailable) {
+                view.showErrorMessage("Unable to close sale", operationNotAvailable.getMessage());
+                return false;
+            }
             return true;
         }
     }
@@ -82,6 +99,9 @@ public class CashRegisterPaneController implements Observer {
             view.removeFromTable();
             context.removeSoldItem(article);
             view.updateTotalPrice(-article.getPrice());
+            if (context.getCurrentSale().getCurrentState() instanceof ClosedState) {
+                view.showDiscount(context.getDiscount());
+            }
         }
     }
 
