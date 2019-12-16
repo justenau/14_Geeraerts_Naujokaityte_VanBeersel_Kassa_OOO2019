@@ -2,14 +2,11 @@ package database;
 
 import Exceptions.OperationNotAvailable;
 import javafx.collections.ObservableList;
-import model.Article;
 import model.discount.DiscountStrategy;
+import model.products.Article;
 import model.receipt.Receipt;
 import model.receipt.ReceiptFactory;
-import model.sale.ActiveState;
-import model.sale.ClosedState;
-import model.sale.OnHoldState;
-import model.sale.Sale;
+import model.sale.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -101,7 +98,7 @@ public class ArticleDBContext extends Observable {
         }
         getCurrentSale().setOnHoldState();
         setChanged();
-        notifyObservers(OnHoldState.class);
+        notifyObservers(SaleEventEnum.PUT_ON_HOLD);
         startNewSale();
         return true;
     }
@@ -153,12 +150,12 @@ public class ArticleDBContext extends Observable {
             onHoldClientCounter = 0;
             getSaleOnHold().setCancelledState();
             setChanged();
-            notifyObservers(OnHoldState.class);
+            notifyObservers(SaleEventEnum.CANCEL);
         }
         current.setDiscount(getDiscount());
         getCurrentSale().setClosedState();
         setChanged();
-        notifyObservers(ClosedState.class);
+        notifyObservers(SaleEventEnum.CLOSE);
         //TODO: move to after payment!
         printReceipt(current);
     }

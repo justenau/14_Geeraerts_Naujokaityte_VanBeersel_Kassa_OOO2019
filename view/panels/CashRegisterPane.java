@@ -10,7 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import model.Article;
+import model.products.Article;
 
 /**
  * @author Justė Naujokaitytė

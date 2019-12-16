@@ -3,7 +3,7 @@ package model.sale;
 import Exceptions.OperationNotAvailable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Article;
+import model.products.Article;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

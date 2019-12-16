@@ -1,6 +1,6 @@
 package database;
 
-import model.Article;
+import model.products.Article;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package model.sale;
 
 import Exceptions.OperationNotAvailable;
-import model.Article;
+import model.products.Article;
 
 public class ClosedState extends SaleState {
 
@@ -9,10 +9,9 @@ public class ClosedState extends SaleState {
         super(sale);
     }
 
-    //TODO:
     @Override
-    void cancel() throws OperationNotAvailable {
-
+    void cancel() {
+        sale.setCurrentState(sale.getCancelledState());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package model.discount;
 
-import model.Article;
+import model.products.Article;
 import model.sale.Sale;
 
 /**

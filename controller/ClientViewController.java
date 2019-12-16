@@ -2,9 +2,9 @@ package controller;
 
 import database.ArticleDBContext;
 import javafx.collections.ObservableList;
-import model.Article;
+import model.products.Article;
 import model.sale.ClosedState;
-import model.sale.OnHoldState;
+import model.sale.SaleEventEnum;
 import view.ClientView;
 
 import java.util.Observable;
@@ -41,10 +41,10 @@ public class ClientViewController implements Observer {
             if (context.getCurrentSale().getCurrentState() instanceof ClosedState) {
                 view.showDiscount(context.getDiscount());
             }
-        } else if (arg == OnHoldState.class) {
+        } else if (arg == SaleEventEnum.PUT_ON_HOLD) {
             view.clearList();
             view.clearTotalPrice();
-        } else if (arg == ClosedState.class) {
+        } else if (arg == SaleEventEnum.CLOSE) {
             view.showDiscount(context.getDiscount());
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;

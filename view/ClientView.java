@@ -11,7 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import model.Article;
+import model.products.Article;
 
 import java.util.AbstractMap;
 import java.util.Map;

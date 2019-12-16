@@ -1,7 +1,7 @@
 package model.sale;
 
 import Exceptions.OperationNotAvailable;
-import model.Article;
+import model.products.Article;
 
 public abstract class SaleState {
     protected Sale sale;

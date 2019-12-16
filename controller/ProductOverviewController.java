@@ -4,7 +4,7 @@ import database.ArticleDBContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import model.Article;
+import model.products.Article;
 import view.panels.ProductOverviewPane;
 
 import java.io.IOException;

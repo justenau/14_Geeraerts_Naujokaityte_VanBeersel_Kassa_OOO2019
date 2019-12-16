@@ -1,6 +1,6 @@
 package database;
 
-import model.Article;
+import model.products.Article;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
