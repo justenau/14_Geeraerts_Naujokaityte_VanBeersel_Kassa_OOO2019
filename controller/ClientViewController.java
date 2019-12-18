@@ -3,7 +3,9 @@ package controller;
 import database.ArticleDBContext;
 import javafx.collections.ObservableList;
 import model.products.Article;
+import model.sale.CancelledState;
 import model.sale.ClosedState;
+import model.sale.FinishedState;
 import model.sale.SaleEventEnum;
 import view.ClientView;
 
@@ -42,6 +44,24 @@ public class ClientViewController implements Observer {
                 view.showDiscount(context.getDiscount());
                 view.showAmountToPay(context.getAmountToPay());
             }
+            if (context.getCurrentSale().getCurrentState() instanceof CancelledState) {
+                view.hideAmountToPay();
+                view.hideDiscount();
+            }
+            if (context.getCurrentSale().getCurrentState() instanceof FinishedState) {
+                view.hideAmountToPay();
+                view.hideDiscount();
+            }
+        } else if (arg == SaleEventEnum.CANCEL) {
+            view.hideDiscount();
+            view.hideAmountToPay();
+            view.clearList();
+            view.clearTotalPrice();
+        } else if (arg == SaleEventEnum.FINISH) {
+            view.hideDiscount();
+            view.hideAmountToPay();
+            view.clearList();
+            view.clearTotalPrice();
         } else if (arg == SaleEventEnum.PUT_ON_HOLD) {
             view.clearList();
             view.clearTotalPrice();

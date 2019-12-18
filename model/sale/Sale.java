@@ -92,6 +92,7 @@ public class Sale {
     public OnHoldState getOnHoldState(){
         return onHoldState;
     }
+
     public HashMap<Article, Integer> getDistinctArticles() {
         HashMap<Article, Integer> distinctArticles = new HashMap<>();
         for (Article article : this.articles) {

@@ -2,6 +2,7 @@ package controller;
 
 import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
+import javafx.collections.ObservableList;
 import model.products.Article;
 import model.sale.ClosedState;
 import model.sale.SaleEventEnum;
@@ -48,6 +49,7 @@ public class CashRegisterPaneController implements Observer {
             view.showErrorMessage("Article cannot be added", e.getMessage());
         }
     }
+
     public void putSaleOnHold() {
         try {
             if (!context.putActiveSaleOnHold()) {
@@ -111,8 +113,41 @@ public class CashRegisterPaneController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg == SaleEventEnum.CANCEL) {
-            view.disableSaleOnHold();
+            view.cancelSale();
+        } else if(arg == SaleEventEnum.FINISH){
+            view.paymentSale();
         }
     }
 
+    public void payedSale() {
+        try {
+            if (!context.payActiveSale()) {
+                view.showErrorMessage("Unable to complete Payment", "The sale cannot be payed");
+                return;
+            }
+            context.getCurrentSale().getArticles().clear();
+            view.updateTableList(context.getCurrentSale().getArticles());
+            view.resetTotalPrice();
+            view.hideDiscount();
+            view.hideAmountToPay();
+        }catch (OperationNotAvailable e){
+            view.showErrorMessage("Unable to complete payment", e.getMessage());
+        }
+    }
+
+    public void cancelSale() {
+        try {
+            if (!context.cancelActiveSale()) {
+                view.showErrorMessage("Unable to cancel sale", "A sale can't be cancelled");
+                return;
+            }
+            context.getCurrentSale().getArticles().clear();
+            view.updateTableList(context.getCurrentSale().getArticles());
+            view.resetTotalPrice();
+            view.hideDiscount();
+            view.hideAmountToPay();
+        }catch (OperationNotAvailable e){
+            view.showErrorMessage("Unable to cancel sale", e.getMessage());
+        }
+    }
 }

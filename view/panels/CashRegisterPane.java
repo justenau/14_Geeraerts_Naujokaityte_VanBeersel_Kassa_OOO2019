@@ -66,6 +66,16 @@ public class CashRegisterPane extends GridPane {
             getBackBtn.setDisable(false);
         });
 
+        Button payedBtn = new Button("Payed");
+        payedBtn.setPrefWidth(170);
+        payedBtn.setDisable(true);
+        payedBtn.setOnAction(a -> {
+            controller.payedSale();
+            getBackBtn.setDisable(true);
+            onHoldBtn.setDisable(false);
+            closeSaleBtn.setDisable(false);
+        });
+
         getBackBtn.setDisable(true);
         getBackBtn.setOnAction(a -> {
             controller.continueSaleOnHold();
@@ -77,6 +87,7 @@ public class CashRegisterPane extends GridPane {
             if (controller.closeSale()) {
                 onHoldBtn.setDisable(true);
                 closeSaleBtn.setDisable(true);
+                payedBtn.setDisable(false);
             }
         });
 
@@ -86,6 +97,14 @@ public class CashRegisterPane extends GridPane {
         deleteBtn.setOnAction(a -> {
             controller.deleteArticle(table.getSelectionModel().getSelectedItem()); //article
         });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setPrefWidth(170);
+
+        cancelBtn.setOnAction(a -> {
+            controller.cancelSale(); //article
+        });
+
 
         this.add(totalLabel, 0, 0);
         this.add(priceField, 1, 0);
@@ -98,6 +117,8 @@ public class CashRegisterPane extends GridPane {
         this.add(getBackBtn, 1, 3);
         this.add(closeSaleBtn, 2, 3);
         this.add(deleteBtn, 3, 3);
+        this.add(payedBtn,4,3);
+        this.add(cancelBtn,5,3);
         this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
         this.setHgap(5);
@@ -166,15 +187,33 @@ public class CashRegisterPane extends GridPane {
         discountAmount.setVisible(true);
     }
 
+    public void hideDiscount() {
+        discountLabel.setVisible(false);
+        discountAmount.setVisible(false);
+    }
+
     public void showAmountToPay(double amount) {
         amountToPayLabel.setVisible(true);
         amountToPay.setText(String.format("%.2f", amount));
         amountToPay.setVisible(true);
     }
 
+    public void hideAmountToPay() {
+        amountToPayLabel.setVisible(false);
+        amountToPay.setVisible(false);
+    }
+
     public void disableSaleOnHold() {
         showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been cancelled");
         getBackBtn.setDisable(true);
+    }
+
+    public void cancelSale() {
+        showMessage(Alert.AlertType.INFORMATION, "Sale cancelled", "Sale has been cancelled");
+    }
+
+    public void paymentSale() {
+        showMessage(Alert.AlertType.INFORMATION, "Payment Approved", "The payment has succeeded");
     }
 
     //removes it from Cashregisters point of view (maybe better for CashRegisterViewController?) Not sure

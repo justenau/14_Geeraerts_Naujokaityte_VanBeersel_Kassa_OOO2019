@@ -120,10 +120,20 @@ public class ClientView {
 		discountAmount.setVisible(true);
 	}
 
+	public void hideDiscount() {
+		discountLabel.setVisible(false);
+		discountAmount.setVisible(false);
+	}
+
 	public void showAmountToPay(double amount) {
 		amountToPayLabel.setVisible(true);
 		amountToPay.setText(String.format("%.2f", amount));
 		amountToPay.setVisible(true);
+	}
+
+	public void hideAmountToPay() {
+		amountToPayLabel.setVisible(false);
+		amountToPay.setVisible(false);
 	}
 
 	public double getTotalPrice() {

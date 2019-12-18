@@ -103,6 +103,32 @@ public class ArticleDBContext extends Observable {
         return true;
     }
 
+    public boolean cancelActiveSale() throws OperationNotAvailable {
+        for (Sale sale : getArticleDB().getSales()){
+            if (sale.getCurrentState() instanceof CancelledState){
+                return false;
+            }
+        }
+        getCurrentSale().setCancelledState();
+        setChanged();
+        notifyObservers(SaleEventEnum.CANCEL);
+        startNewSale();
+        return true;
+    }
+
+    public boolean payActiveSale() throws OperationNotAvailable {
+        for (Sale sale : getArticleDB().getSales()){
+            if (sale.getCurrentState() instanceof FinishedState){
+                return false;
+            }
+        }
+        getCurrentSale().setFinishedState();
+        setChanged();
+        notifyObservers(SaleEventEnum.FINISH);
+        startNewSale();
+        return true;
+    }
+
     public double getActiveSalePrice() {
         double price = 0;
         for (Article article : getActiveSaleSoldItems()) {
