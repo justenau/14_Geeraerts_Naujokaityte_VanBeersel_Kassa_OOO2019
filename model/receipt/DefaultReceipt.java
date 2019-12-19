@@ -21,8 +21,9 @@ public class DefaultReceipt implements Receipt {
         System.out.printf("%-20s %-20s %-20s%n", "Description", "Number", "Price");
         System.out.printf("*****************************************************%n");
         for (Map.Entry<Article, Integer> entry : sale.getDistinctArticles().entrySet()) {
+            int itemCount = entry.getValue();
             System.out.printf("%-20s %-20d %-20.2f%n", entry.getKey().getDescription(),
-                    entry.getValue(), entry.getKey().getPrice());
+                    itemCount, entry.getKey().getPrice() * itemCount);
         }
         System.out.printf("*****************************************************%n");
         System.out.printf("Paid (including discount) : %.2f%n", sale.getPriceWithoutDiscount() - sale.getDiscount());

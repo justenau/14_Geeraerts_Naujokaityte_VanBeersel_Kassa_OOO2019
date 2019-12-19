@@ -1,6 +1,6 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.products.Article;
@@ -8,6 +8,9 @@ import model.products.Article;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+/**
+ * @author Justė Naujokaitytė
+ */
 public class Sale {
 
     private ObservableList<Article> articles;
@@ -120,5 +123,13 @@ public class Sale {
 
     public double getDiscount() {
         return discount;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

@@ -1,6 +1,5 @@
 package view;
 
-import controller.CashRegisterViewController;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -9,7 +8,7 @@ import javafx.stage.Stage;
 public class CashRegisterView {
     private Stage stage = new Stage();
 
-    public CashRegisterView(CashRegisterViewController controller, BorderPane mainPane) {
+    public CashRegisterView(BorderPane mainPane) {
 		stage.setTitle("CASH REGISTER VIEW");
         stage.setResizable(false);
 		stage.setX(20);

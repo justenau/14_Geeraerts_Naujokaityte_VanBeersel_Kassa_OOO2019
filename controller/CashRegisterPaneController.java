@@ -1,7 +1,7 @@
 package controller;
 
-import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
+import exceptions.OperationNotAvailable;
 import model.products.Article;
 import model.sale.ClosedState;
 import model.sale.SaleEventEnum;

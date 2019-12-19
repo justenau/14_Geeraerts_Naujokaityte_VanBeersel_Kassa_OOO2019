@@ -1,5 +1,8 @@
 package model.products;
 
+/**
+ * @author Justė Naujokaitytė, Quinten Geeraerts
+ */
 public class Article {
     private int code;
     private String description;
