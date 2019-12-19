@@ -10,8 +10,8 @@ public class OnHoldState extends SaleState {
     }
 
     @Override
-    void cancel() throws OperationNotAvailable {
-        throw new OperationNotAvailable("Sale has to be put on active before it can be canceled");
+    void cancel() {
+        sale.setCurrentState(sale.getCancelledState());
     }
 
     @Override

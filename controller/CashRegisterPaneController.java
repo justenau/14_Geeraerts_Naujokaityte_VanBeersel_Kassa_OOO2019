@@ -2,7 +2,6 @@ package controller;
 
 import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
-import javafx.collections.ObservableList;
 import model.products.Article;
 import model.sale.ClosedState;
 import model.sale.SaleEventEnum;
@@ -77,10 +76,9 @@ public class CashRegisterPaneController implements Observer {
         }
     }
 
-    public boolean closeSale() {
+    public void closeSale() {
         if (context.getActiveSaleSoldItems().isEmpty()) {
             view.showErrorMessage("No products bought", "There are no products!");
-            return false;
         } else {
             double discount = context.getDiscount();
             double amountToPay = context.getAmountToPay();
@@ -90,9 +88,7 @@ public class CashRegisterPaneController implements Observer {
                 context.closeSale();
             } catch (OperationNotAvailable operationNotAvailable) {
                 view.showErrorMessage("Unable to close sale", operationNotAvailable.getMessage());
-                return false;
             }
-            return true;
         }
     }
 
@@ -112,10 +108,18 @@ public class CashRegisterPaneController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg == SaleEventEnum.CANCEL) {
-            view.cancelSale();
-        } else if(arg == SaleEventEnum.FINISH){
-            view.paymentSale();
+        if (arg instanceof SaleEventEnum) {
+            switch ((SaleEventEnum) arg) {
+                case CANCEL:
+                    view.cancelSale();
+                    break;
+                case FINISH:
+                    view.paymentSale();
+                    break;
+                case CANCEL_ON_HOLD:
+                    view.disableSaleOnHold();
+                    break;
+            }
         }
     }
 

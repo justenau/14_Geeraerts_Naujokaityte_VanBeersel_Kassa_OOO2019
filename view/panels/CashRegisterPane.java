@@ -23,7 +23,6 @@ public class CashRegisterPane extends GridPane {
     private Label discountAmount;
     private Label amountToPayLabel;
     private Label amountToPay;
-    private Button getBackBtn;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
         controller.setView(this);
@@ -55,40 +54,27 @@ public class CashRegisterPane extends GridPane {
 
         Button onHoldBtn = new Button("Put on hold");
         onHoldBtn.setPrefWidth(190);
-        getBackBtn = new Button("Continue sale on hold");
+        Button getBackBtn = new Button("Continue sale on hold");
         getBackBtn.setPrefWidth(250);
         Button closeSaleBtn = new Button("Close sale");
         closeSaleBtn.setPrefWidth(170);
 
         onHoldBtn.setOnAction(a -> {
             controller.putSaleOnHold();
-            onHoldBtn.setDisable(true);
-            getBackBtn.setDisable(false);
         });
 
         Button payedBtn = new Button("Payed");
         payedBtn.setPrefWidth(170);
-        payedBtn.setDisable(true);
         payedBtn.setOnAction(a -> {
             controller.payedSale();
-            getBackBtn.setDisable(true);
-            onHoldBtn.setDisable(false);
-            closeSaleBtn.setDisable(false);
         });
 
-        getBackBtn.setDisable(true);
         getBackBtn.setOnAction(a -> {
             controller.continueSaleOnHold();
-            getBackBtn.setDisable(true);
-            onHoldBtn.setDisable(false);
         });
 
         closeSaleBtn.setOnAction(a -> {
-            if (controller.closeSale()) {
-                onHoldBtn.setDisable(true);
-                closeSaleBtn.setDisable(true);
-                payedBtn.setDisable(false);
-            }
+            controller.closeSale();
         });
 
         Button deleteBtn = new Button("Delete");
@@ -102,7 +88,7 @@ public class CashRegisterPane extends GridPane {
         cancelBtn.setPrefWidth(170);
 
         cancelBtn.setOnAction(a -> {
-            controller.cancelSale(); //article
+            controller.cancelSale();
         });
 
 
@@ -204,8 +190,7 @@ public class CashRegisterPane extends GridPane {
     }
 
     public void disableSaleOnHold() {
-        showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been cancelled");
-        getBackBtn.setDisable(true);
+        showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been removed");
     }
 
     public void cancelSale() {
@@ -216,7 +201,6 @@ public class CashRegisterPane extends GridPane {
         showMessage(Alert.AlertType.INFORMATION, "Payment Approved", "The payment has succeeded");
     }
 
-    //removes it from Cashregisters point of view (maybe better for CashRegisterViewController?) Not sure
     public void removeFromTable(){
         table.getItems().remove(table.getSelectionModel().getSelectedCells());
     }

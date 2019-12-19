@@ -9,7 +9,10 @@ public class ActiveState extends SaleState {
     }
 
     @Override
-    public void cancel() {
+    public void cancel() throws OperationNotAvailable {
+        if (sale.getArticles().size() == 0) {
+            throw new OperationNotAvailable("The sale has not been started yet - there are no products in the list");
+        }
         sale.setCurrentState(sale.getCancelledState());
     }
 
@@ -24,7 +27,10 @@ public class ActiveState extends SaleState {
     }
 
     @Override
-    public void putOnHold() {
+    public void putOnHold() throws OperationNotAvailable {
+        if (sale.getArticles().size() == 0) {
+            throw new OperationNotAvailable("There are no products in the list to be put on hold");
+        }
         sale.setCurrentState(sale.getOnHoldState());
     }
 
@@ -34,7 +40,7 @@ public class ActiveState extends SaleState {
     }
 
     @Override
-    void addArticle(Article article) throws OperationNotAvailable {
+    void addArticle(Article article) {
         sale.getArticles().add(article);
     }
 }

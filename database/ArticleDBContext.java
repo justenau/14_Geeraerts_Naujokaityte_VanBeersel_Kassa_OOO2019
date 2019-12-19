@@ -104,11 +104,6 @@ public class ArticleDBContext extends Observable {
     }
 
     public boolean cancelActiveSale() throws OperationNotAvailable {
-        for (Sale sale : getArticleDB().getSales()){
-            if (sale.getCurrentState() instanceof CancelledState){
-                return false;
-            }
-        }
         getCurrentSale().setCancelledState();
         setChanged();
         notifyObservers(SaleEventEnum.CANCEL);
@@ -117,15 +112,16 @@ public class ArticleDBContext extends Observable {
     }
 
     public boolean payActiveSale() throws OperationNotAvailable {
-        for (Sale sale : getArticleDB().getSales()){
-            if (sale.getCurrentState() instanceof FinishedState){
-                return false;
-            }
-        }
         getCurrentSale().setFinishedState();
         setChanged();
         notifyObservers(SaleEventEnum.FINISH);
         startNewSale();
+        if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
+            onHoldClientCounter = 0;
+            getSaleOnHold().setCancelledState();
+            setChanged();
+            notifyObservers(SaleEventEnum.CANCEL_ON_HOLD);
+        }
         return true;
     }
 
@@ -139,7 +135,7 @@ public class ArticleDBContext extends Observable {
 
     public Sale getSaleOnHold() {
         for (Sale sale : articleDB.getSales()) {
-            if (sale.getCurrentState().getClass() == OnHoldState.class) {
+            if (sale.getCurrentState() instanceof OnHoldState) {
                 return sale;
             }
         }
@@ -149,7 +145,10 @@ public class ArticleDBContext extends Observable {
     public boolean continueSaleOnHold() throws OperationNotAvailable {
         Sale currentSale = getCurrentSale();
         Sale saleOnHold = getSaleOnHold();
-        if (currentSale.getArticles().isEmpty() && saleOnHold != null) {
+        if (saleOnHold == null) {
+            throw new OperationNotAvailable("There is no sale put on hold");
+        }
+        if (currentSale.getArticles().isEmpty()) {
             articleDB.getSales().remove(currentSale);
             saleOnHold.setActiveState();
             setChanged();
@@ -176,12 +175,6 @@ public class ArticleDBContext extends Observable {
 
     public void closeSale() throws OperationNotAvailable {
         Sale current = getCurrentSale();
-        if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
-            onHoldClientCounter = 0;
-            getSaleOnHold().setCancelledState();
-            setChanged();
-            notifyObservers(SaleEventEnum.CANCEL);
-        }
         current.setDiscount(getDiscount());
         getCurrentSale().setClosedState();
         setChanged();
