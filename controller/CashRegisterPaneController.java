@@ -37,7 +37,8 @@ public class CashRegisterPaneController implements Observer {
                 return;
             }
             if (!context.checkAvailabilityForSale(article)) {
-                view.showErrorMessage("Product not in stock", "Chosen product is not in stock for sale!");
+                view.showErrorMessage("Product not in stock",
+                        "Chosen product is not in stock for sale (it might be put on hold)!");
                 return;
             }
             context.addSoldItem(article);
