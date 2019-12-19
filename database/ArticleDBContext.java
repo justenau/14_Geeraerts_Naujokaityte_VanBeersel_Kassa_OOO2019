@@ -11,10 +11,7 @@ import model.sale.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Properties;
+import java.util.*;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
@@ -57,6 +54,16 @@ public class ArticleDBContext extends Observable {
         activeSale.removeArticle(article);
         setChanged();
         notifyObservers(article);
+    }
+
+    public void updateStock(ObservableList<Article> observableList, Collection<Article> values){
+        for (Article o : observableList){
+            o.setStock(o.getStock()-1);
+        }
+        System.out.println(values);
+        // values has the updated version of every article
+        //setChanged();
+        //notifyObservers(observableList);
     }
 
     public Sale getCurrentSale() {
