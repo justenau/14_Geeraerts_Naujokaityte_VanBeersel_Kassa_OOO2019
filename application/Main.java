@@ -57,7 +57,8 @@ public class Main extends Application {
      */
     private void createUI(ArticleDBContext articleDBContext) {
         //TODO: create controllers for all tabs
-        LogPane logPane = new LogPane();
+        LogPaneController logPaneController = new LogPaneController(articleDBContext);
+        LogPane logPane = new LogPane(logPaneController);
 
         CashRegisterPaneController cashRegisterPaneController = new CashRegisterPaneController(articleDBContext);
         CashRegisterPane cashRegisterPane = new CashRegisterPane(cashRegisterPaneController);

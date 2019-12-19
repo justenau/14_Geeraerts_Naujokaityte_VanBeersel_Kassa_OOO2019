@@ -14,5 +14,6 @@ public class CashRegisterViewController {
 
     public void setView(CashRegisterView cashRegisterView) {
         this.view = cashRegisterView;
+
     }
 }
