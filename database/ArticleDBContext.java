@@ -10,10 +10,7 @@ import model.sale.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Properties;
+import java.util.*;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
@@ -65,6 +62,14 @@ public class ArticleDBContext extends Observable {
     public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
             if (sale.getCurrentState() instanceof ActiveState || sale.getCurrentState() instanceof ClosedState)
+                return sale;
+        }
+        return null;
+    }
+
+    public Sale getFinishedSale(){
+        for (Sale sale : this.articleDB.getSales()) {
+            if (sale.getCurrentState() instanceof FinishedState)
                 return sale;
         }
         return null;

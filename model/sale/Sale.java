@@ -121,4 +121,8 @@ public class Sale {
     public double getDiscount() {
         return discount;
     }
+
+    public double getPriceWithDiscount(){
+        return getPriceWithoutDiscount() - getDiscount();
+    }
 }
