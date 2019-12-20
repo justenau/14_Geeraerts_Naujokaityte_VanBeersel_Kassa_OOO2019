@@ -204,4 +204,8 @@ public class CashRegisterPane extends GridPane {
     public void removeFromTable(){
         table.getItems().remove(table.getSelectionModel().getSelectedCells());
     }
+
+    public void refreshTable() {
+        table.refresh();
+    }
 }

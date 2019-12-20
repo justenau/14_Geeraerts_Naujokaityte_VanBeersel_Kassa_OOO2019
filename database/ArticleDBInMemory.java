@@ -29,8 +29,12 @@ public class ArticleDBInMemory implements ArticleDBStrategy {
     }
 
     @Override
-    public void save(ArrayList<Article> articles) throws FileNotFoundException {
-        loadSaveStrategy.save(articles);
+    public void save(ArrayList<Article> articles) {
+        try {
+            loadSaveStrategy.save(articles);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public LoadSaveStrategy getLoadSaveStrategy() {

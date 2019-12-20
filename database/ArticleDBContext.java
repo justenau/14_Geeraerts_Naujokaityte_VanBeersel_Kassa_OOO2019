@@ -9,9 +9,11 @@ import model.receipt.ReceiptFactory;
 import model.sale.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Properties;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
@@ -38,10 +40,6 @@ public class ArticleDBContext extends Observable {
         return articleDB.getArticles();
     }
 
-    public void saveArticleDB(ArrayList<Article> articles) throws FileNotFoundException {
-        articleDB.save(articles);
-    }
-
     public void addSoldItem(Article article) throws OperationNotAvailable {
         Sale activeSale = getCurrentSale();
         activeSale.addArticle(article);
@@ -56,14 +54,12 @@ public class ArticleDBContext extends Observable {
         notifyObservers(article);
     }
 
-    public void updateStock(ObservableList<Article> observableList, Collection<Article> values){
-        for (Article o : observableList){
-            o.setStock(o.getStock()-1);
+    public void updateStock(Sale sale) {
+        HashMap<Integer, Article> articles = articleDB.getArticles();
+        for (Article article : sale.getArticles()) {
+            articles.get(article.getCode()).reduceStock(1);
         }
-        System.out.println(values);
-        // values has the updated version of every article
-        //setChanged();
-        //notifyObservers(observableList);
+        articleDB.save(new ArrayList<>(articles.values()));
     }
 
     public Sale getCurrentSale() {
@@ -83,11 +79,14 @@ public class ArticleDBContext extends Observable {
     }
 
     public boolean checkAvailabilityForSale(Article article) {
-        int currentStock = article.getStock();
         int saleCount = 0;
+        int currentStock = article.getStock();
         for (Sale sale : articleDB.getSales()) {
-            for (Article a : sale.getArticles()) {
-                saleCount = a.getCode() == article.getCode() ? saleCount + 1 : saleCount;
+            SaleState saleState = sale.getCurrentState();
+            if (saleState instanceof OnHoldState || saleState instanceof ActiveState) {
+                for (Article a : sale.getArticles()) {
+                    saleCount = a.getCode() == article.getCode() ? saleCount + 1 : saleCount;
+                }
             }
         }
         return currentStock > 0 && saleCount != currentStock;
@@ -118,8 +117,10 @@ public class ArticleDBContext extends Observable {
         return true;
     }
 
-    public boolean payActiveSale() throws OperationNotAvailable {
-        getCurrentSale().setFinishedState();
+    public void payActiveSale() throws OperationNotAvailable {
+        Sale current = getCurrentSale();
+        current.setFinishedState();
+        updateStock(current);
         setChanged();
         notifyObservers(SaleEventEnum.FINISH);
         startNewSale();
@@ -129,7 +130,6 @@ public class ArticleDBContext extends Observable {
             setChanged();
             notifyObservers(SaleEventEnum.CANCEL_ON_HOLD);
         }
-        return true;
     }
 
     public double getActiveSalePrice() {

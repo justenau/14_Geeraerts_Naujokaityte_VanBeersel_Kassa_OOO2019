@@ -2,13 +2,11 @@ package controller;
 
 import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
-import javafx.collections.ObservableList;
 import model.products.Article;
 import model.sale.ClosedState;
 import model.sale.SaleEventEnum;
 import view.panels.CashRegisterPane;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -118,6 +116,7 @@ public class CashRegisterPaneController implements Observer {
                     break;
                 case FINISH:
                     view.paymentSale();
+                    view.refreshTable();
                     break;
                 case CANCEL_ON_HOLD:
                     view.disableSaleOnHold();
@@ -128,12 +127,7 @@ public class CashRegisterPaneController implements Observer {
 
     public void payedSale() {
         try {
-            ObservableList<Article> ob = context.getCurrentSale().getArticles();
-            if (!context.payActiveSale()) {
-                view.showErrorMessage("Unable to complete Payment", "The sale cannot be payed");
-                return;
-            }
-            context.updateStock(ob,context.getArticles().values());
+            context.payActiveSale();
             context.getCurrentSale().getArticles().clear();
             view.updateTableList(context.getCurrentSale().getArticles());
             view.resetTotalPrice();

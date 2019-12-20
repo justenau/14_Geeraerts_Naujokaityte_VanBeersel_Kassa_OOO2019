@@ -55,6 +55,10 @@ public class Article {
         this.stock = stock;
     }
 
+    public void reduceStock(int amount) {
+        this.stock -= amount;
+    }
+
     @Override
     public String toString() {
         return "[" +

@@ -1,14 +1,10 @@
 package controller;
 
 import database.ArticleDBContext;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.products.Article;
-import model.sale.CancelledState;
-import model.sale.ClosedState;
-import model.sale.FinishedState;
 import model.sale.SaleEventEnum;
 import view.panels.ProductOverviewPane;
 
@@ -41,9 +37,8 @@ public class ProductOverviewController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof Observable) {
-            ObservableList<Article> articles = (ObservableList<Article>) arg;
-            view.setTableContent(articles);
+        if (arg == SaleEventEnum.FINISH) {
+            view.updateTable();
         }
     }
 

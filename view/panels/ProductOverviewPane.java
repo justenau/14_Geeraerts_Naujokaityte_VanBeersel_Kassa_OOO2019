@@ -50,4 +50,8 @@ public class ProductOverviewPane extends GridPane {
         table.getSortOrder().add(colDescription);
 		this.add(table,0,1);
 	}
+
+    public void updateTable() {
+        table.refresh();
+    }
 }
