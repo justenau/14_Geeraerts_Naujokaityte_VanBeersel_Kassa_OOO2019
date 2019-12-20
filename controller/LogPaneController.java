@@ -30,6 +30,7 @@ public class LogPaneController implements Observer {
         if (arg == SaleEventEnum.FINISH) {
             sales.add(context.getFinishedSale());
             view.setTableContent(sales);
+            view.updateTable();
         }
     }
 }

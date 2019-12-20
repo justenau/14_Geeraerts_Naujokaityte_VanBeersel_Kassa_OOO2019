@@ -7,76 +7,49 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.products.Article;
 import model.sale.Sale;
 
-import java.util.Map;
 
 public class LogPane extends GridPane {
     private TableView table;
-    private Label logFieldDateLabel;
-    private Label logFieldDate;
-    private Label totalPriceLabel;
-    private Label totalPrice;
-    private Label discountLabel;
-    private Label discountAmount;
-    private Label amountToPayLabel;
-    private Label amountToPay;
+
     public LogPane(LogPaneController controller) {
+        this.setPadding(new Insets(5, 5, 5, 5));
+        //this.setVgap(5);
+        //this.setHgap(5)
+
+
         controller.setView(this);
-        logFieldDateLabel = new Label("Date: ");
-        logFieldDateLabel.setPrefWidth(100);
-        logFieldDate = new Label();
-        logFieldDate.setPrefWidth(100);
-        totalPriceLabel = new Label("Total price:");
-        totalPriceLabel.setPrefWidth(100);
-        totalPrice = new Label();
-        totalPrice.setPrefWidth(100);
-        discountLabel = new Label("Discount: ");
-        discountLabel.setPrefWidth(100);
-        discountAmount = new Label();
-        discountAmount.setPrefWidth(100);
-        amountToPayLabel = new Label("Price without discount: ");
-        amountToPayLabel.setPrefWidth(100);
-        amountToPay = new Label();
-        amountToPay.setPrefWidth(100);
-
-
-        this.add(logFieldDateLabel,0,0);
-        this.add(logFieldDate,1,0);
-        this.add(totalPriceLabel, 2,0);
-        this.add(totalPrice,3,0);
-        this.add(discountLabel,4,0);
-        this.add(discountAmount,5,0);
-        this.add(amountToPayLabel,6,0);
-        this.add(amountToPay,7,0);
-
     }
 
 
     public void setTableContent(ObservableList<Sale> observableList) {
+        table = new TableView<>();
         table.setItems(observableList);
-        /*
-        showTotalPrice(articleDBContext.getFinishedSale().getPriceWithoutDiscount());
-        showDiscAmount(articleDBContext.getFinishedSale().getDiscount());
-        showAmountToPay(articleDBContext.getFinishedSale().getPriceWithDiscount());
-        */
-
+        table.setRowFactory(articleTableView -> new TableRow<>());
+        TableColumn<Sale, String> colDateTime = new TableColumn<>("Date Time");
+        colDateTime.setMinWidth(200);
+        colDateTime.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+        TableColumn<Sale, Double> colTotalPrice = new TableColumn<>("Total price");
+        colTotalPrice.setMinWidth(150);
+        colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        TableColumn<Sale, Double> colDiscount = new TableColumn<>("discount");
+        colDiscount.setMinWidth(150);
+        colDiscount.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        TableColumn<Sale, Double> colToBePayed = new TableColumn<>("To be payed");
+        colToBePayed.setMinWidth(150);
+        colToBePayed.setCellValueFactory(new PropertyValueFactory<>("toPayPrice"));
+        table.getColumns().addAll(colDateTime,colTotalPrice,colDiscount,colToBePayed);
+        this.add(table,0,1);
     }
 
-    public void showTotalPrice(double totalPriceamount) {
-        totalPrice.setText(String.format("%.2f", totalPriceamount));
-    }
-
-    public void showDiscAmount(double discountamount) {
-        discountAmount.setText(String.format("%.2f", discountamount));
-    }
-    public void showAmountToPay(double pricewithdiscamount) {
-        amountToPay.setText(String.format("%.2f", pricewithdiscamount));
-    }
 
     public void updateTable() {
         table.refresh();

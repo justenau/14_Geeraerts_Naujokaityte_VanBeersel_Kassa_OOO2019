@@ -6,13 +6,16 @@ import javafx.collections.ObservableList;
 import model.products.Article;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Sale {
 
     private ObservableList<Article> articles;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private double discount;
+    private double totalPrice;
+    private double toPayPrice;
 
     private ActiveState activeState;
     private CancelledState cancelledState;
@@ -24,6 +27,9 @@ public class Sale {
 
     public Sale() {
         this.articles = FXCollections.observableArrayList();
+        setDateTime();
+        setTotalPrice();
+        setToPayPrice();
 
         activeState = new ActiveState(this);
         cancelledState = new CancelledState(this);
@@ -108,6 +114,32 @@ public class Sale {
 
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.dateTime = dtf.format(now);
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice() {
+        this.totalPrice = getPriceWithoutDiscount();
+    }
+
+    public double getToPayPrice() {
+        return toPayPrice;
+    }
+
+    public void setToPayPrice() {
+        this.toPayPrice = getPriceWithoutDiscount() - getDiscount();
     }
 
     public double getPriceWithoutDiscount() {

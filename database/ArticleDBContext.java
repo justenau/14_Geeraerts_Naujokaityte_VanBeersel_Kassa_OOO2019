@@ -128,6 +128,7 @@ public class ArticleDBContext extends Observable {
         updateStock(current);
         setChanged();
         notifyObservers(SaleEventEnum.FINISH);
+
         startNewSale();
         if (getSaleOnHold() != null && ++onHoldClientCounter == 3) {
             onHoldClientCounter = 0;
