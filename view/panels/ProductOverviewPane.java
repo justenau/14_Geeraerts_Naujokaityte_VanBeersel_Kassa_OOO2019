@@ -18,7 +18,7 @@ public class ProductOverviewPane extends GridPane {
 	private TableView<Article> table;
 
     public ProductOverviewPane(ProductOverviewController controller) {
-		this.setPadding(new Insets(5, 5, 5, 5));
+        this.setPadding(new Insets(20, 20, 20, 20));
         this.setVgap(5);
         this.setHgap(5);
         
@@ -35,19 +35,20 @@ public class ProductOverviewPane extends GridPane {
 		colCode.setMinWidth(70);
 		colCode.setCellValueFactory(new PropertyValueFactory<>("Code"));
         TableColumn<Article, String> colDescription = new TableColumn<>("Description");
-		colDescription.setMinWidth(120);
+        colDescription.setMinWidth(250);
 		colDescription.setCellValueFactory(new PropertyValueFactory<>("Description"));
 		TableColumn<Article, String> colGroup = new TableColumn<>("Group");
-		colGroup.setMinWidth(100);
+        colGroup.setMinWidth(200);
 		colGroup.setCellValueFactory(new PropertyValueFactory<>("Group"));
 		TableColumn<Article, Double> colPrice = new TableColumn<>("Price");
-		colPrice.setMinWidth(100);
+        colPrice.setMinWidth(150);
 		colPrice.setCellValueFactory(new PropertyValueFactory<>("Price"));
 		TableColumn<Article, String> colStock = new TableColumn<>("Stock");
 		colStock.setMinWidth(70);
 		colStock.setCellValueFactory(new PropertyValueFactory<>("Stock"));
 		table.getColumns().addAll(colCode, colDescription, colGroup,colPrice,colStock);
         table.getSortOrder().add(colDescription);
+        table.setPrefWidth(760);
 		this.add(table,0,1);
 	}
 

@@ -1,8 +1,11 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import model.products.Article;
 
+/**
+ * @author Quinten Geeraerts, Justė Naujokaitytė
+ */
 public class CancelledState extends SaleState {
 
     public CancelledState(Sale sale){

@@ -1,16 +1,18 @@
 package database;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import javafx.collections.ObservableList;
 import model.discount.DiscountStrategy;
 import model.products.Article;
-import model.receipt.Receipt;
-import model.receipt.ReceiptFactory;
 import model.sale.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Observable;
+import java.util.stream.Collectors;
 
 public class ArticleDBContext extends Observable {
     private ArticleDBStrategy articleDB;
@@ -62,14 +64,6 @@ public class ArticleDBContext extends Observable {
     public Sale getCurrentSale() {
         for (Sale sale : this.articleDB.getSales()) {
             if (sale.getCurrentState() instanceof ActiveState || sale.getCurrentState() instanceof ClosedState)
-                return sale;
-        }
-        return null;
-    }
-
-    public Sale getFinishedSale(){
-        for (Sale sale : this.articleDB.getSales()) {
-            if (sale.getCurrentState() instanceof FinishedState)
                 return sale;
         }
         return null;
@@ -146,7 +140,7 @@ public class ArticleDBContext extends Observable {
         return price;
     }
 
-    public Sale getSaleOnHold() {
+    private Sale getSaleOnHold() {
         for (Sale sale : articleDB.getSales()) {
             if (sale.getCurrentState() instanceof OnHoldState) {
                 return sale;
@@ -192,30 +186,19 @@ public class ArticleDBContext extends Observable {
         getCurrentSale().setClosedState();
         setChanged();
         notifyObservers(SaleEventEnum.CLOSE);
-        //TODO: move to after payment!
-        printReceipt(current);
     }
-    //TODO: move somewhere else (maybe console controller?)
-    public void printReceipt(Sale sale) {
-        String receiptMsg;
-        boolean receiptDateTime;
-        boolean receiptTotDisc;
-        boolean receiptVAT;
-        String receiptClosing;
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream("src/files/config.properties"));
-            receiptMsg = properties.getProperty("receiptMsg");
-            receiptDateTime = Boolean.parseBoolean(properties.getProperty("receiptDateTime"));
-            receiptTotDisc = Boolean.parseBoolean(properties.getProperty("receiptTotDisc"));
-            receiptVAT = Boolean.parseBoolean(properties.getProperty("receiptVAT"));
-            receiptClosing = properties.getProperty("receiptClosing");
-            Receipt receipt = ReceiptFactory.getInstance()
-                    .createReceipt(sale, receiptMsg, receiptDateTime, receiptTotDisc, receiptVAT, receiptClosing);
-            receipt.print();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+    public Sale getLastFinishedSale() {
+        LocalDateTime min = LocalDateTime.MIN;
+        Sale finishedSale = null;
+        List<Sale> finishedSales = articleDB.getSales().stream()
+                .filter(sale -> sale.getCurrentState() instanceof FinishedState).collect(Collectors.toList());
+        for (Sale sale : finishedSales) {
+            if (sale.getDateTime().isAfter(min)) {
+                min = sale.getDateTime();
+                finishedSale = sale;
+            }
         }
+        return finishedSale;
     }
 }

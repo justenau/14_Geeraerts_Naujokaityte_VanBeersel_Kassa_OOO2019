@@ -30,8 +30,6 @@ public class ArticleTextLoadSave extends TextLoadSaveTemplate {
 
     @Override
     public List<String> readFile() throws IOException {
-        //TODO: get file path from properties?
-        System.out.println(new File(".").getAbsolutePath());
         return Files.readAllLines(new File("src/files/artikel.txt").toPath(), StandardCharsets.UTF_8);
     }
 

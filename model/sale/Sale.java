@@ -1,18 +1,20 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.products.Article;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
+/**
+ * @author Justė Naujokaitytė
+ */
 public class Sale {
 
     private ObservableList<Article> articles;
-    private String dateTime;
+    private LocalDateTime dateTime;
     private double discount;
     private double totalPrice;
     private double toPayPrice;
@@ -27,10 +29,6 @@ public class Sale {
 
     public Sale() {
         this.articles = FXCollections.observableArrayList();
-        setDateTime();
-        setTotalPrice();
-        setToPayPrice();
-
         activeState = new ActiveState(this);
         cancelledState = new CancelledState(this);
         closedState = new ClosedState(this);
@@ -116,14 +114,16 @@ public class Sale {
         this.discount = discount;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    public double getPriceWithoutDiscount() {
+        double total = 0;
+        for (Article article : this.articles) {
+            total += article.getPrice();
+        }
+        return total;
     }
 
-    public void setDateTime() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        this.dateTime = dtf.format(now);
+    public double getDiscount() {
+        return discount;
     }
 
     public double getTotalPrice() {
@@ -142,19 +142,11 @@ public class Sale {
         this.toPayPrice = getPriceWithoutDiscount() - getDiscount();
     }
 
-    public double getPriceWithoutDiscount() {
-        double total = 0;
-        for (Article article : this.articles) {
-            total += article.getPrice();
-        }
-        return total;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public double getDiscount() {
-        return discount;
-    }
-
-    public double getPriceWithDiscount(){
-        return getPriceWithoutDiscount() - getDiscount();
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }
