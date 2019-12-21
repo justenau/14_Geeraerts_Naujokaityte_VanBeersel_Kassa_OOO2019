@@ -5,6 +5,7 @@ import model.products.Article;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +19,11 @@ public class ArticleTextLoadSave extends TextLoadSaveTemplate {
         PrintWriter pw = new PrintWriter(new FileOutputStream("src/files/artikel.txt"));
         ArrayList<Article> articles = new ArrayList<>(objects);
         for (Article article : articles) {
-            pw.println(String.format("%d,%s,%s,%.2f,%d",
+            pw.println(String.format("%d,%s,%s,%s,%d",
                     article.getCode(),
                     article.getDescription(),
                     article.getGroup(),
-                    article.getPrice(),
+                    new DecimalFormat("#.##").format(article.getPrice()),
                     article.getStock()));
         }
         pw.close();

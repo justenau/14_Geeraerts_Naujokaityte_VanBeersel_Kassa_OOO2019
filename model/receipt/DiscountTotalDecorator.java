@@ -1,5 +1,7 @@
 package model.receipt;
 
+import java.text.DecimalFormat;
+
 /**
  * @author Justė Naujokaitytė
  */
@@ -16,7 +18,8 @@ public class DiscountTotalDecorator extends ReceiptDecorator {
     }
 
     private void addDiscountAndTotal() {
-        System.out.printf("Total price: %.2f%n", decoratedReceipt.getSale().getPriceWithoutDiscount());
-        System.out.printf("Discount: %.2f%n", decoratedReceipt.getSale().getDiscount());
+        DecimalFormat format = new DecimalFormat("#.##");
+        System.out.printf("Total price: %s%n", format.format(decoratedReceipt.getSale().getPriceWithoutDiscount()));
+        System.out.printf("Discount: %s%n", format.format(decoratedReceipt.getSale().getDiscount()));
     }
 }

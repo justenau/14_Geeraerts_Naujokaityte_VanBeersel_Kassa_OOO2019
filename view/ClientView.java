@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.products.Article;
 
+import java.text.DecimalFormat;
 import java.util.AbstractMap;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class ClientView {
 		TableColumn<Map.Entry<Article, Integer>, String> colPrice = new TableColumn<>("Price");
 		colPrice.setMinWidth(100);
 		colPrice.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(
-				String.format("%.2f", param.getValue().getKey().getPrice() * param.getValue().getValue())));
+				new DecimalFormat("#.##").format(param.getValue().getKey().getPrice() * param.getValue().getValue())));
 
 		tableView.getColumns().addAll(colDescription, colAmount, colPrice);
 		tableView.setPrefWidth(500);
@@ -101,7 +102,7 @@ public class ClientView {
 
 	public void updateTotalPrice(double price) {
 		double newPrice = Double.parseDouble(priceField.getText()) + price;
-		priceField.setText(String.format("%.2f", newPrice));
+		priceField.setText(new DecimalFormat("#.##").format(newPrice));
 	}
 
 
@@ -116,7 +117,7 @@ public class ClientView {
 
 	public void showDiscount(double discount) {
 		discountLabel.setVisible(true);
-		discountAmount.setText(String.format("%.2f", discount));
+		discountAmount.setText(new DecimalFormat("#.##").format(discount));
 		discountAmount.setVisible(true);
 	}
 
@@ -127,7 +128,7 @@ public class ClientView {
 
 	public void showAmountToPay(double amount) {
 		amountToPayLabel.setVisible(true);
-		amountToPay.setText(String.format("%.2f", amount));
+		amountToPay.setText(new DecimalFormat("#.##").format(amount));
 		amountToPay.setVisible(true);
 	}
 

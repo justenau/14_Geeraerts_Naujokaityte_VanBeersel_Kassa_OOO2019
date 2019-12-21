@@ -3,6 +3,7 @@ package model.receipt;
 import model.products.Article;
 import model.sale.Sale;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 /**
@@ -26,7 +27,8 @@ public class DefaultReceipt implements Receipt {
                     itemCount, entry.getKey().getPrice() * itemCount);
         }
         System.out.printf("*****************************************************%n");
-        System.out.printf("Paid (including discount) : %.2f%n", sale.getPriceWithoutDiscount() - sale.getDiscount());
+        System.out.printf("Paid (including discount) : %s%n",
+                new DecimalFormat("#.##").format(sale.getPriceWithoutDiscount() - sale.getDiscount()));
     }
 
     @Override

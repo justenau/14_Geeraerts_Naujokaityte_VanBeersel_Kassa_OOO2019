@@ -12,6 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.sale.Sale;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -23,10 +24,6 @@ public class LogPane extends GridPane {
 
     public LogPane(LogPaneController controller) {
         this.setPadding(new Insets(5, 5, 5, 5));
-        //this.setVgap(5);
-        //this.setHgap(5)
-
-
         controller.setView(this);
         initTableView();
     }
@@ -47,7 +44,7 @@ public class LogPane extends GridPane {
                     if (empty) {
                         setText(null);
                     } else {
-                        setText(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(item));
+                        setText(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(item));
                     }
                 }
             };
@@ -56,14 +53,31 @@ public class LogPane extends GridPane {
         TableColumn<Sale, Double> colTotalPrice = new TableColumn<>("Total price");
         colTotalPrice.setMinWidth(150);
         colTotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+        formatNumberCell(colTotalPrice);
         TableColumn<Sale, Double> colDiscount = new TableColumn<>("Discount");
         colDiscount.setMinWidth(150);
         colDiscount.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        formatNumberCell(colDiscount);
         TableColumn<Sale, Double> colToBePayed = new TableColumn<>("To be payed");
         colToBePayed.setMinWidth(150);
         colToBePayed.setCellValueFactory(new PropertyValueFactory<>("toPayPrice"));
+        formatNumberCell(colToBePayed);
         table.getColumns().addAll(colDateTime, colTotalPrice, colDiscount, colToBePayed);
         this.add(table, 0, 1);
+    }
+
+    private void formatNumberCell(TableColumn<Sale, Double> decimalValue) {
+        decimalValue.setCellFactory(tc -> new TableCell<Sale, Double>() {
+            @Override
+            protected void updateItem(Double discount, boolean empty) {
+                super.updateItem(discount, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(new DecimalFormat("#.##").format(discount));
+                }
+            }
+        });
     }
 
     public void addToList(Sale lastFinishedSale) {

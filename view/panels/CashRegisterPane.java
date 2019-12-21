@@ -12,6 +12,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.products.Article;
 
+import java.text.DecimalFormat;
+
 /**
  * @author Justė Naujokaitytė
  */
@@ -164,12 +166,12 @@ public class CashRegisterPane extends GridPane {
     }
 
     public void setTotalPrice(double price) {
-        priceField.setText(String.format("%.2f", price));
+        priceField.setText(new DecimalFormat("#.##").format(price));
     }
 
     public void showDiscount(double discount) {
         discountLabel.setVisible(true);
-        discountAmount.setText(String.format("%.2f", discount));
+        discountAmount.setText(new DecimalFormat("#.##").format(discount));
         discountAmount.setVisible(true);
     }
 
@@ -180,7 +182,7 @@ public class CashRegisterPane extends GridPane {
 
     public void showAmountToPay(double amount) {
         amountToPayLabel.setVisible(true);
-        amountToPay.setText(String.format("%.2f", amount));
+        amountToPay.setText(new DecimalFormat("#.##").format(amount));
         amountToPay.setVisible(true);
     }
 
