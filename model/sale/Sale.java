@@ -130,7 +130,7 @@ public class Sale {
         return totalPrice;
     }
 
-    public void setTotalPrice() {
+    public void calculateTotalPrice() {
         this.totalPrice = getPriceWithoutDiscount();
     }
 
@@ -138,7 +138,7 @@ public class Sale {
         return toPayPrice;
     }
 
-    public void setToPayPrice() {
+    public void calculateToPayPrice() {
         this.toPayPrice = getPriceWithoutDiscount() - getDiscount();
     }
 

@@ -15,12 +15,7 @@ public abstract class  TextLoadSaveTemplate implements LoadSaveStrategy {
         return collection;
     }
 
-//    public final void save(ArrayList articles){
-//
-//    }
-
     public abstract void save(ArrayList objects) throws FileNotFoundException;
-
     public abstract List<String> readFile() throws IOException;
     public abstract ArrayList convertToObjects(List<String> fileContent);
 

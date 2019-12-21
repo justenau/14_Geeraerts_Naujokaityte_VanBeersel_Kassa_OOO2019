@@ -28,8 +28,8 @@ public class ClosedState extends SaleState {
     public void finish() {
         sale.setCurrentState(sale.getFinishedState());
         sale.setDateTime(LocalDateTime.now());
-        sale.setTotalPrice();
-        sale.setToPayPrice();
+        sale.calculateTotalPrice();
+        sale.calculateToPayPrice();
     }
 
     @Override
