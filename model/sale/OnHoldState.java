@@ -1,8 +1,11 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import model.products.Article;
 
+/**
+ * @author Quinten Geeraerts, Justė Naujokaitytė
+ */
 public class OnHoldState extends SaleState {
 
     public OnHoldState(Sale sale){
@@ -10,8 +13,8 @@ public class OnHoldState extends SaleState {
     }
 
     @Override
-    void cancel() throws OperationNotAvailable {
-        throw new OperationNotAvailable("Sale has to be put on active before it can be canceled");
+    void cancel() {
+        sale.setCurrentState(sale.getCancelledState());
     }
 
     @Override

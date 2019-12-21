@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * @author Justė Naujokaitytė
+ */
 public class Main extends Application {
-	@Override
-	public void start(Stage primaryStage) {
-		ArticleDBContext articleDBContext = new ArticleDBContext();
+    @Override
+    public void start(Stage primaryStage) {
+        ArticleDBContext articleDBContext = new ArticleDBContext();
         Properties properties = new Properties();
-		try {
+        try {
             properties.load(new FileInputStream("src/files/config.properties"));
             String dbType = properties.getProperty("database");
             ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(dbType);
@@ -51,13 +54,9 @@ public class Main extends Application {
 
     }
 
-
-    /**
-     * @author Justė Naujokaitytė
-     */
     private void createUI(ArticleDBContext articleDBContext) {
-        //TODO: create controllers for all tabs
-        LogPane logPane = new LogPane();
+        LogPaneController logPaneController = new LogPaneController(articleDBContext);
+        LogPane logPane = new LogPane(logPaneController);
 
         CashRegisterPaneController cashRegisterPaneController = new CashRegisterPaneController(articleDBContext);
         CashRegisterPane cashRegisterPane = new CashRegisterPane(cashRegisterPaneController);
@@ -74,16 +73,17 @@ public class Main extends Application {
         cashRegisterMainPane.addTab(settingsPane, "Settings");
         cashRegisterMainPane.addTab(logPane, "Log");
 
-        CashRegisterViewController cashRegisterViewController = new CashRegisterViewController(articleDBContext);
-        CashRegisterView cashRegisterView = new CashRegisterView(cashRegisterViewController, cashRegisterMainPane);
+        CashRegisterView cashRegisterView = new CashRegisterView(cashRegisterMainPane);
+
+        ConsoleController consoleController = new ConsoleController(articleDBContext);
 
         ClientViewController clientViewController = new ClientViewController(articleDBContext);
         ClientView clientView = new ClientView(clientViewController);
     }
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
         Locale.setDefault(Locale.US);
-		launch(args);
+        launch(args);
     }
 
 

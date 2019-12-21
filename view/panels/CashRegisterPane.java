@@ -12,6 +12,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.products.Article;
 
+import java.text.DecimalFormat;
+
 /**
  * @author Justė Naujokaitytė
  */
@@ -23,7 +25,6 @@ public class CashRegisterPane extends GridPane {
     private Label discountAmount;
     private Label amountToPayLabel;
     private Label amountToPay;
-    private Button getBackBtn;
 
     public CashRegisterPane(CashRegisterPaneController controller) {
         controller.setView(this);
@@ -55,54 +56,65 @@ public class CashRegisterPane extends GridPane {
 
         Button onHoldBtn = new Button("Put on hold");
         onHoldBtn.setPrefWidth(190);
-        getBackBtn = new Button("Continue sale on hold");
-        getBackBtn.setPrefWidth(250);
-        Button closeSaleBtn = new Button("Close sale");
-        closeSaleBtn.setPrefWidth(170);
-
         onHoldBtn.setOnAction(a -> {
             controller.putSaleOnHold();
-            onHoldBtn.setDisable(true);
-            getBackBtn.setDisable(false);
         });
 
-        getBackBtn.setDisable(true);
+        Button getBackBtn = new Button("Continue sale on hold");
+        getBackBtn.setPrefWidth(250);
         getBackBtn.setOnAction(a -> {
             controller.continueSaleOnHold();
-            getBackBtn.setDisable(true);
-            onHoldBtn.setDisable(false);
         });
 
+        Button closeSaleBtn = new Button("Close sale");
+        closeSaleBtn.setPrefWidth(170);
+        closeSaleBtn.setStyle("-fx-background-color: \n" +
+                "        linear-gradient(from 0% 93% to 0% 100%, #b68924 0%, #9d822c 100%), #c97711, #d8a027,\n" +
+                "        radial-gradient(center 50% 50%, radius 100%, #d89715, #d8b63b);");
         closeSaleBtn.setOnAction(a -> {
-            if (controller.closeSale()) {
-                onHoldBtn.setDisable(true);
-                closeSaleBtn.setDisable(true);
-            }
+            controller.closeSale();
         });
 
-        Button deleteBtn = new Button("Delete");
-        deleteBtn.setPrefWidth(170);
+        Button payedBtn = new Button("Payed");
+        payedBtn.setStyle("-fx-background-color: \n" +
+                "        linear-gradient(from 0% 93% to 0% 100%, #5ca329 0%, #689d5b 100%), #5b9a4a, #a6d860,\n" +
+                "        radial-gradient(center 50% 50%, radius 100%, #90d859, #ced852);");
+        payedBtn.setPrefWidth(170);
+        payedBtn.setOnAction(a -> {
+            controller.payedSale();
+        });
 
+        Button deleteBtn = new Button("Delete selected");
+        deleteBtn.setPrefWidth(170);
         deleteBtn.setOnAction(a -> {
             controller.deleteArticle(table.getSelectionModel().getSelectedItem()); //article
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setPrefWidth(170);
+        cancelBtn.setStyle("-fx-background-color: \n" +
+                "        linear-gradient(from 0% 93% to 0% 100%, #a34313 0%, #903b12 100%), #9d4024, #d86e3a,\n" +
+                "        radial-gradient(center 50% 50%, radius 100%, #d86e3a, #c54e2c);");
+        cancelBtn.setOnAction(a -> {
+            controller.cancelSale();
         });
 
         this.add(totalLabel, 0, 0);
         this.add(priceField, 1, 0);
         this.add(discountLabel, 2, 0);
         this.add(discountAmount, 3, 0);
-        this.add(amountToPayLabel, 0, 1);
-        this.add(amountToPay, 1, 1);
-        this.add(codeInput, 4, 0);
-        this.add(onHoldBtn, 0, 3);
-        this.add(getBackBtn, 1, 3);
-        this.add(closeSaleBtn, 2, 3);
-        this.add(deleteBtn, 3, 3);
+        this.add(amountToPayLabel, 4, 0);
+        this.add(amountToPay, 5, 0);
+        this.add(codeInput, 5, 1);
+        this.add(onHoldBtn, 4, 3);
+        this.add(getBackBtn, 5, 3);
+        this.add(closeSaleBtn, 0, 3);
+        this.add(deleteBtn, 0, 1);
+        this.add(payedBtn, 1, 3);
+        this.add(cancelBtn, 2, 3);
         this.setPadding(new Insets(20, 20, 20, 20));
-        this.setVgap(5);
+        this.setVgap(10);
         this.setHgap(5);
-        setMargin(codeInput, new Insets(0, 0, 0, 100));
-
     }
 
     public void setTableContent(ObservableList<Article> soldItems) {
@@ -110,7 +122,7 @@ public class CashRegisterPane extends GridPane {
         table.setItems(soldItems);
         table.setRowFactory(tableView -> new TableRow<>());
         TableColumn<Article, String> colDescription = new TableColumn<>("Description");
-        colDescription.setMinWidth(120);
+        colDescription.setMinWidth(550);
         colDescription.setCellValueFactory(data -> {
             StringProperty sp = new SimpleStringProperty();
             sp.setValue(String.valueOf(data.getValue().getDescription()));
@@ -118,7 +130,7 @@ public class CashRegisterPane extends GridPane {
         });
 
         TableColumn<Article, Double> colPrice = new TableColumn<>("Price");
-        colPrice.setMinWidth(100);
+        colPrice.setMinWidth(200);
         colPrice.setCellValueFactory(data -> {
             DoubleProperty dp = new SimpleDoubleProperty();
             dp.setValue(data.getValue().getPrice());
@@ -126,11 +138,8 @@ public class CashRegisterPane extends GridPane {
         });
         table.getColumns().addAll(colDescription, colPrice);
 
-        table.setPrefWidth(500);
-        this.add(table, 0, 2, 5, 1);
+        this.add(table, 0, 2, 6, 1);
     }
-
-
 
     public void showErrorMessage(String header, String message) {
         showMessage(Alert.AlertType.ERROR, header, message);
@@ -157,28 +166,48 @@ public class CashRegisterPane extends GridPane {
     }
 
     public void setTotalPrice(double price) {
-        priceField.setText(String.format("%.2f", price));
+        priceField.setText(new DecimalFormat("#.##").format(price));
     }
 
     public void showDiscount(double discount) {
         discountLabel.setVisible(true);
-        discountAmount.setText(String.format("%.2f", discount));
+        discountAmount.setText(new DecimalFormat("#.##").format(discount));
         discountAmount.setVisible(true);
+    }
+
+    public void hideDiscount() {
+        discountLabel.setVisible(false);
+        discountAmount.setVisible(false);
     }
 
     public void showAmountToPay(double amount) {
         amountToPayLabel.setVisible(true);
-        amountToPay.setText(String.format("%.2f", amount));
+        amountToPay.setText(new DecimalFormat("#.##").format(amount));
         amountToPay.setVisible(true);
     }
 
-    public void disableSaleOnHold() {
-        showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been cancelled");
-        getBackBtn.setDisable(true);
+    public void hideAmountToPay() {
+        amountToPayLabel.setVisible(false);
+        amountToPay.setVisible(false);
     }
 
-    //removes it from Cashregisters point of view (maybe better for CashRegisterViewController?) Not sure
+    public void disableSaleOnHold() {
+        showMessage(Alert.AlertType.INFORMATION, "Client on hold removed", "Client on hold sale has been removed");
+    }
+
+    public void cancelSale() {
+        showMessage(Alert.AlertType.INFORMATION, "Sale cancelled", "Sale has been cancelled");
+    }
+
+    public void paymentSale() {
+        showMessage(Alert.AlertType.INFORMATION, "Payment Approved", "The payment has succeeded");
+    }
+
     public void removeFromTable(){
         table.getItems().remove(table.getSelectionModel().getSelectedCells());
+    }
+
+    public void refreshTable() {
+        table.refresh();
     }
 }

@@ -1,8 +1,13 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import model.products.Article;
 
+import java.time.LocalDateTime;
+
+/**
+ * @author Quinten Geeraerts, Justė Naujokaitytė
+ */
 public class ClosedState extends SaleState {
 
     public ClosedState(Sale sale){
@@ -22,6 +27,9 @@ public class ClosedState extends SaleState {
     @Override
     public void finish() {
         sale.setCurrentState(sale.getFinishedState());
+        sale.setDateTime(LocalDateTime.now());
+        sale.calculateTotalPrice();
+        sale.calculateToPayPrice();
     }
 
     @Override

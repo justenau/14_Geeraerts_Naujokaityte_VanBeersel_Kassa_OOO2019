@@ -1,5 +1,8 @@
 package model.products;
 
+/**
+ * @author Justė Naujokaitytė, Quinten Geeraerts
+ */
 public class Article {
     private int code;
     private String description;
@@ -53,6 +56,10 @@ public class Article {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public void reduceStock(int amount) {
+        this.stock -= amount;
     }
 
     @Override

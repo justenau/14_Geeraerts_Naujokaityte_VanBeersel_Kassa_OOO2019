@@ -18,7 +18,7 @@ public class DateTimeDecorator extends ReceiptDecorator {
 
     @Override
     public void print() {
-        String dt = dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+        String dt = dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
         System.out.printf("%s%n", dt);
         decoratedReceipt.print();
     }

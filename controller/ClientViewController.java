@@ -3,7 +3,9 @@ package controller;
 import database.ArticleDBContext;
 import javafx.collections.ObservableList;
 import model.products.Article;
+import model.sale.CancelledState;
 import model.sale.ClosedState;
+import model.sale.FinishedState;
 import model.sale.SaleEventEnum;
 import view.ClientView;
 
@@ -16,7 +18,6 @@ import java.util.Observer;
 public class ClientViewController implements Observer {
 
     private ClientView view;
-    private int itemCount = 0;
 
     public ClientViewController(ArticleDBContext context) {
         context.addObserver(this);
@@ -42,12 +43,36 @@ public class ClientViewController implements Observer {
                 view.showDiscount(context.getDiscount());
                 view.showAmountToPay(context.getAmountToPay());
             }
-        } else if (arg == SaleEventEnum.PUT_ON_HOLD) {
+            if (context.getCurrentSale().getCurrentState() instanceof CancelledState) {
+                view.hideAmountToPay();
+                view.hideDiscount();
+            }
+            if (context.getCurrentSale().getCurrentState() instanceof FinishedState) {
+                view.hideAmountToPay();
+                view.hideDiscount();
+            }
+        } else if (arg instanceof SaleEventEnum) {
+            SaleEventEnum event = (SaleEventEnum) arg;
+            view.hideDiscount();
+            view.hideAmountToPay();
             view.clearList();
             view.clearTotalPrice();
-        } else if (arg == SaleEventEnum.CLOSE) {
-            view.showDiscount(context.getDiscount());
-            view.showAmountToPay(context.getAmountToPay());
+            switch (event) {
+                case FINISH:
+                    view.hideDiscount();
+                    view.hideAmountToPay();
+                    view.clearList();
+                    view.clearTotalPrice();
+                    break;
+                case PUT_ON_HOLD:
+                    view.clearList();
+                    view.clearTotalPrice();
+                    break;
+                case CLOSE:
+                    view.showDiscount(context.getDiscount());
+                    view.showAmountToPay(context.getAmountToPay());
+                    break;
+            }
         } else if (arg instanceof ObservableList) {
             ObservableList<Article> articles = (ObservableList<Article>) arg;
             for (Article article : articles) {

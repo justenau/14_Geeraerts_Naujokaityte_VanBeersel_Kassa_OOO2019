@@ -1,7 +1,7 @@
 package controller;
 
-import Exceptions.OperationNotAvailable;
 import database.ArticleDBContext;
+import exceptions.OperationNotAvailable;
 import model.products.Article;
 import model.sale.ClosedState;
 import model.sale.SaleEventEnum;
@@ -37,7 +37,8 @@ public class CashRegisterPaneController implements Observer {
                 return;
             }
             if (!context.checkAvailabilityForSale(article)) {
-                view.showErrorMessage("Product not in stock", "Chosen product is not in stock for sale!");
+                view.showErrorMessage("Product not in stock",
+                        "Chosen product is not in stock for sale (it might be put on hold)!");
                 return;
             }
             context.addSoldItem(article);
@@ -48,6 +49,7 @@ public class CashRegisterPaneController implements Observer {
             view.showErrorMessage("Article cannot be added", e.getMessage());
         }
     }
+
     public void putSaleOnHold() {
         try {
             if (!context.putActiveSaleOnHold()) {
@@ -75,10 +77,9 @@ public class CashRegisterPaneController implements Observer {
         }
     }
 
-    public boolean closeSale() {
+    public void closeSale() {
         if (context.getActiveSaleSoldItems().isEmpty()) {
             view.showErrorMessage("No products bought", "There are no products!");
-            return false;
         } else {
             double discount = context.getDiscount();
             double amountToPay = context.getAmountToPay();
@@ -88,9 +89,7 @@ public class CashRegisterPaneController implements Observer {
                 context.closeSale();
             } catch (OperationNotAvailable operationNotAvailable) {
                 view.showErrorMessage("Unable to close sale", operationNotAvailable.getMessage());
-                return false;
             }
-            return true;
         }
     }
 
@@ -110,9 +109,48 @@ public class CashRegisterPaneController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg == SaleEventEnum.CANCEL) {
-            view.disableSaleOnHold();
+        if (arg instanceof SaleEventEnum) {
+            switch ((SaleEventEnum) arg) {
+                case CANCEL:
+                    view.cancelSale();
+                    break;
+                case FINISH:
+                    view.paymentSale();
+                    view.refreshTable();
+                    break;
+                case CANCEL_ON_HOLD:
+                    view.disableSaleOnHold();
+                    break;
+            }
         }
     }
 
+    public void payedSale() {
+        try {
+            context.payActiveSale();
+            context.getCurrentSale().getArticles().clear();
+            view.updateTableList(context.getCurrentSale().getArticles());
+            view.resetTotalPrice();
+            view.hideDiscount();
+            view.hideAmountToPay();
+        }catch (OperationNotAvailable e){
+            view.showErrorMessage("Unable to complete payment", e.getMessage());
+        }
+    }
+
+    public void cancelSale() {
+        try {
+            if (!context.cancelActiveSale()) {
+                view.showErrorMessage("Unable to cancel sale", "A sale can't be cancelled");
+                return;
+            }
+            context.getCurrentSale().getArticles().clear();
+            view.updateTableList(context.getCurrentSale().getArticles());
+            view.resetTotalPrice();
+            view.hideDiscount();
+            view.hideAmountToPay();
+        }catch (OperationNotAvailable e){
+            view.showErrorMessage("Unable to cancel sale", e.getMessage());
+        }
+    }
 }

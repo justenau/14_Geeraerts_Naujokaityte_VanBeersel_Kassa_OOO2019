@@ -5,17 +5,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.products.Article;
+import model.sale.SaleEventEnum;
 import view.panels.ProductOverviewPane;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ProductOverviewController {
+public class ProductOverviewController implements Observer {
 
     private ProductOverviewPane view;
     private ObservableList<Article> articles;
 
     public ProductOverviewController(ArticleDBContext context) {
         try {
+            context.addObserver(this);
             articles = FXCollections.observableArrayList(context.loadArticleDB());
         } catch (IOException e) {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -30,4 +34,12 @@ public class ProductOverviewController {
         this.view = view;
         view.setTableContent(articles);
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg == SaleEventEnum.FINISH) {
+            view.updateTable();
+        }
+    }
+
 }

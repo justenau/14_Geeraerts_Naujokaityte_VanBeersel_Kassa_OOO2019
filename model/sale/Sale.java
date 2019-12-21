@@ -1,6 +1,6 @@
 package model.sale;
 
-import Exceptions.OperationNotAvailable;
+import exceptions.OperationNotAvailable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.products.Article;
@@ -8,11 +8,16 @@ import model.products.Article;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+/**
+ * @author Justė Naujokaitytė
+ */
 public class Sale {
 
     private ObservableList<Article> articles;
     private LocalDateTime dateTime;
     private double discount;
+    private double totalPrice;
+    private double toPayPrice;
 
     private ActiveState activeState;
     private CancelledState cancelledState;
@@ -24,7 +29,6 @@ public class Sale {
 
     public Sale() {
         this.articles = FXCollections.observableArrayList();
-
         activeState = new ActiveState(this);
         cancelledState = new CancelledState(this);
         closedState = new ClosedState(this);
@@ -92,6 +96,7 @@ public class Sale {
     public OnHoldState getOnHoldState(){
         return onHoldState;
     }
+
     public HashMap<Article, Integer> getDistinctArticles() {
         HashMap<Article, Integer> distinctArticles = new HashMap<>();
         for (Article article : this.articles) {
@@ -119,5 +124,29 @@ public class Sale {
 
     public double getDiscount() {
         return discount;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void calculateTotalPrice() {
+        this.totalPrice = getPriceWithoutDiscount();
+    }
+
+    public double getToPayPrice() {
+        return toPayPrice;
+    }
+
+    public void calculateToPayPrice() {
+        this.toPayPrice = getPriceWithoutDiscount() - getDiscount();
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }
