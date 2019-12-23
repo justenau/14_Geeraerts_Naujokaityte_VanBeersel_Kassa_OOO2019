@@ -35,7 +35,6 @@ public class SettingsPaneController {
             properties.load(new FileInputStream("src/files/config.properties"));
             if (databaseValue != null && !databaseValue.isEmpty()) {
                 ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(databaseValue);
-                context.setArticleDB(articleDBStrategy);
                 properties.setProperty("database", databaseValue);
             }
             if (loadSaveValue != null && !loadSaveValue.isEmpty()) {
