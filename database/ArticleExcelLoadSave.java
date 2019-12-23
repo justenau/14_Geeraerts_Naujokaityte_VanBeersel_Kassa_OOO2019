@@ -51,10 +51,9 @@ public class ArticleExcelLoadSave implements LoadSaveStrategy {
             subarrayList.add(Integer.toString(article.getStock()));
             arrayList.add(subarrayList);
         }
-
         try {
-            excelPlugin.write(new File(getClass().getResource("/files/artikel.xls").toURI()), arrayList);
-        } catch (BiffException | URISyntaxException | WriteException | IOException e) {
+            excelPlugin.write(new File("src/files/artikel.xls"), arrayList);
+        } catch (BiffException | IOException | WriteException e) {
             e.printStackTrace();
         }
     }

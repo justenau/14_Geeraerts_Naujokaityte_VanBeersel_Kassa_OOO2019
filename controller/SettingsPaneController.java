@@ -6,10 +6,8 @@ import model.discount.DiscountFactory;
 import model.discount.DiscountStrategy;
 import view.panels.SettingsPane;
 
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 /**
@@ -54,12 +52,11 @@ public class SettingsPaneController {
             properties.setProperty("receiptDateTime", String.valueOf(receiptDateTime));
             properties.setProperty("receiptTotDisc", String.valueOf(receiptTotDisc));
             properties.setProperty("receiptVAT", String.valueOf(receiptVAT));
-            properties.store(new PrintWriter(new File(getClass().getResource("/files/artikel.txt").toURI().getPath())), null);
-            properties.store(new PrintWriter(new File(getClass().getResource("/files/config.properties").toURI().getPath())), null);
+            properties.store(new FileOutputStream("src/files/config.properties"), null);
 
             view.showMessage(Alert.AlertType.INFORMATION, "Changes saved!",
                     "Changes have been successfully changed!");
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             view.showMessage(Alert.AlertType.ERROR, "Unable to change settings!",
                     "Changes could not be saved.");
         }
