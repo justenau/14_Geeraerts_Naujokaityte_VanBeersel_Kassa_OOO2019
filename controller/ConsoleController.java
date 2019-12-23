@@ -6,7 +6,6 @@ import model.receipt.ReceiptFactory;
 import model.sale.Sale;
 import model.sale.SaleEventEnum;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -37,7 +36,7 @@ public class ConsoleController implements Observer {
         String receiptClosing;
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream("src/files/config.properties"));
+            properties.load(getClass().getResourceAsStream("/files/config.properties"));
             receiptMsg = properties.getProperty("receiptMsg");
             receiptDateTime = Boolean.parseBoolean(properties.getProperty("receiptDateTime"));
             receiptTotDisc = Boolean.parseBoolean(properties.getProperty("receiptTotDisc"));

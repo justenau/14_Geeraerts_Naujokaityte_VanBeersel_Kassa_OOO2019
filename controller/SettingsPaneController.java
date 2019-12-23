@@ -6,9 +6,10 @@ import model.discount.DiscountFactory;
 import model.discount.DiscountStrategy;
 import view.panels.SettingsPane;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 /**
@@ -32,7 +33,7 @@ public class SettingsPaneController {
                             boolean receiptDateTime, boolean receiptTotDisc, boolean receiptVAT) {
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream("src/files/config.properties"));
+            properties.load(getClass().getResourceAsStream("/files/config.properties"));
             if (databaseValue != null && !databaseValue.isEmpty()) {
                 ArticleDBStrategy articleDBStrategy = ArticleDBFactory.getInstance().createDatabase(databaseValue);
                 properties.setProperty("database", databaseValue);
@@ -53,11 +54,12 @@ public class SettingsPaneController {
             properties.setProperty("receiptDateTime", String.valueOf(receiptDateTime));
             properties.setProperty("receiptTotDisc", String.valueOf(receiptTotDisc));
             properties.setProperty("receiptVAT", String.valueOf(receiptVAT));
-            properties.store(new FileOutputStream("src/files/config.properties"), null);
+            properties.store(new PrintWriter(new File(getClass().getResource("/files/artikel.txt").toURI().getPath())), null);
+            properties.store(new PrintWriter(new File(getClass().getResource("/files/config.properties").toURI().getPath())), null);
 
             view.showMessage(Alert.AlertType.INFORMATION, "Changes saved!",
                     "Changes have been successfully changed!");
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             view.showMessage(Alert.AlertType.ERROR, "Unable to change settings!",
                     "Changes could not be saved.");
         }

@@ -8,6 +8,7 @@ import model.products.Article;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 
@@ -23,10 +24,8 @@ public class ArticleExcelLoadSave implements LoadSaveStrategy {
         ArrayList arrayList = new ArrayList();
         ArrayList<Article> articles = new ArrayList();
         try {
-            arrayList = excelPlugin.read(new File("src/files/artikel.xls"));
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            arrayList = excelPlugin.read(new File(getClass().getResource("/files/artikel.xls").toURI()));
+        } catch (BiffException | URISyntaxException | IOException e) {
             e.printStackTrace();
         }
 
@@ -54,12 +53,8 @@ public class ArticleExcelLoadSave implements LoadSaveStrategy {
         }
 
         try {
-            excelPlugin.write(new File("src/files/artikel.xls"), arrayList);
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WriteException e) {
+            excelPlugin.write(new File(getClass().getResource("/files/artikel.xls").toURI()), arrayList);
+        } catch (BiffException | URISyntaxException | WriteException | IOException e) {
             e.printStackTrace();
         }
     }

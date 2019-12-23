@@ -3,11 +3,12 @@ package database;
 import model.products.Article;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Justė Naujokaitytė
@@ -16,22 +17,32 @@ public class ArticleTextLoadSave extends TextLoadSaveTemplate {
 
     @Override
     public void save(ArrayList objects) throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter(new FileOutputStream("src/files/artikel.txt"));
-        ArrayList<Article> articles = new ArrayList<>(objects);
-        for (Article article : articles) {
-            pw.println(String.format("%d,%s,%s,%s,%d",
-                    article.getCode(),
-                    article.getDescription(),
-                    article.getGroup(),
-                    new DecimalFormat("#.##").format(article.getPrice()),
-                    article.getStock()));
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new File(getClass().getResource("/files/artikel.txt").toURI().getPath()));
+            ArrayList<Article> articles = new ArrayList<>(objects);
+            for (Article article : articles) {
+                pw.println(String.format("%d,%s,%s,%s,%d",
+                        article.getCode(),
+                        article.getDescription(),
+                        article.getGroup(),
+                        new DecimalFormat("#.##").format(article.getPrice()),
+                        article.getStock()));
+            }
+            pw.close();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-        pw.close();
     }
 
     @Override
     public List<String> readFile() throws IOException {
-        return Files.readAllLines(new File("src/files/artikel.txt").toPath(), StandardCharsets.UTF_8);
+        try (InputStream resource = getClass().getResourceAsStream("/files/artikel.txt")) {
+            List<String> lines =
+                    new BufferedReader(new InputStreamReader(resource,
+                            StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
+            return lines;
+        }
     }
 
     @Override
